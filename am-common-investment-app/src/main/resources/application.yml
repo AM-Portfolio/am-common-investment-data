@@ -4,3 +4,9 @@ spring:
     token: my-super-secret-auth-token
     org: org
     bucket: investment_data
+
+
+logging:
+  level:
+    root: INFO
+    com.am.common.investment: DEBUG

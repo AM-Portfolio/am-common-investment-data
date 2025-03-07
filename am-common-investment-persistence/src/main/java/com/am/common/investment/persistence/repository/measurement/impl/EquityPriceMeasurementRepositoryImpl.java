@@ -5,28 +5,33 @@ import com.am.common.investment.persistence.repository.measurement.EquityPriceMe
 import com.influxdb.client.InfluxDBClient;
 import com.influxdb.client.QueryApi;
 import com.influxdb.client.WriteApi;
+import com.influxdb.client.write.Point;
 import com.influxdb.client.WriteOptions;
 import com.influxdb.client.domain.WritePrecision;
-import com.influxdb.client.write.Point;
 import com.influxdb.query.dsl.Flux;
 import com.influxdb.query.dsl.functions.restriction.Restrictions;
+
+import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Repository
+@RequiredArgsConstructor
 public class EquityPriceMeasurementRepositoryImpl implements EquityPriceMeasurementRepository {
+    private static final Logger logger = LoggerFactory.getLogger(EquityPriceMeasurementRepositoryImpl.class);
+    private static final String MEASUREMENT_NAME = "equity";
+    private static final String BUCKET_NAME = "investment_data";
+    private static final int BATCH_SIZE = 5000;
+    private static final int FLUSH_INTERVAL = 1000; // milliseconds
 
     private final InfluxDBClient influxDBClient;
-    private final String bucket;
-
-    public EquityPriceMeasurementRepositoryImpl(InfluxDBClient influxDBClient) {
-        this.influxDBClient = influxDBClient;
-        this.bucket = "investment_data";
-        System.out.println("Repository initialized with bucket: " + bucket);
-    }
 
     @Override
     public void save(EquityPriceMeasurement measurement) {
@@ -56,8 +61,50 @@ public class EquityPriceMeasurementRepositoryImpl implements EquityPriceMeasurem
                 ", currency=" + measurement.getCurrency());
             System.out.println("  - Time: " + measurement.getTime());
             
-            writeApi.writePoint(bucket, "org", point);
+            writeApi.writePoint(BUCKET_NAME, "org", point);
             writeApi.flush();
+        }
+    }
+
+    @Override
+    public void saveAll(List<EquityPriceMeasurement> measurements) {
+        if (measurements == null || measurements.isEmpty()) {
+            logger.warn("No measurements provided to save");
+            return;
+        }
+
+        logger.debug("Starting batch save of {} equity price measurements", measurements.size());
+        long startTime = System.currentTimeMillis();
+
+        try {
+            // Configure write options for optimal batch processing
+            WriteOptions writeOptions = WriteOptions.builder()
+                .batchSize(BATCH_SIZE)
+                .flushInterval(FLUSH_INTERVAL)
+                .bufferLimit(50_000)
+                .build();
+
+            try (WriteApi writeApi = influxDBClient.getWriteApi(writeOptions)) {
+                // Write all measurements in a single batch operation
+                writeApi.writeMeasurements(WritePrecision.NS, measurements);
+                writeApi.flush();
+            }
+
+            long endTime = System.currentTimeMillis();
+            long duration = endTime - startTime;
+
+            // Log performance metrics
+            Map<String, Long> measurementsBySymbol = measurements.stream()
+                .collect(Collectors.groupingBy(EquityPriceMeasurement::getSymbol, Collectors.counting()));
+
+            logger.info("Successfully saved {} measurements in {}ms (avg: {:.2f}ms/measurement)", 
+                measurements.size(), duration, (double) duration / measurements.size());
+            logger.debug("Measurements per symbol: {}", measurementsBySymbol);
+
+        } catch (Exception e) {
+            logger.error("Error during batch save of {} measurements: {}", 
+                measurements.size(), e.getMessage(), e);
+            throw new RuntimeException("Failed to save batch of measurements", e);
         }
     }
 
@@ -72,17 +119,16 @@ public class EquityPriceMeasurementRepositoryImpl implements EquityPriceMeasurem
             "|> pivot(rowKey: [\"_time\"], " +
             "        columnKey: [\"_field\"], " +
             "        valueColumn: \"_value\") ",
-            bucket, isin
+            BUCKET_NAME, isin
         );
 
-        System.out.println("Executing query: " + query);
+        logger.debug("Executing findLatestByIsin query for isin: {}", isin);
         QueryApi queryApi = influxDBClient.getQueryApi();
         List<EquityPriceMeasurement> results = queryApi.query(query, EquityPriceMeasurement.class);
-        System.out.println("Query results: " + results);
+        logger.debug("Found {} results for isin: {}", results.size(), isin);
         
         if (!results.isEmpty()) {
             EquityPriceMeasurement measurement = results.get(0);
-            // Ensure all tags are set from the result
             measurement.setIsin(isin);
             measurement.setSymbol(results.get(0).getSymbol());
             measurement.setCurrency(results.get(0).getCurrency());
@@ -103,17 +149,16 @@ public class EquityPriceMeasurementRepositoryImpl implements EquityPriceMeasurem
             "|> pivot(rowKey: [\"_time\"], " +
             "        columnKey: [\"_field\"], " +
             "        valueColumn: \"_value\") ",
-            bucket, symbol
+            BUCKET_NAME, symbol
         );
 
-        System.out.println("Executing InfluxDB query: " + query);
+        logger.debug("Executing findLatestBySymbol query for symbol: {}", symbol);
         QueryApi queryApi = influxDBClient.getQueryApi();
         List<EquityPriceMeasurement> results = queryApi.query(query, EquityPriceMeasurement.class);
-        System.out.println("Query results: " + results);
+        logger.debug("Found {} results for symbol: {}", results.size(), symbol);
         
         if (!results.isEmpty()) {
             EquityPriceMeasurement measurement = results.get(0);
-            // Set the tag values since they're not included in the pivot
             measurement.setSymbol(symbol);
             return Optional.of(measurement);
         }
@@ -122,12 +167,12 @@ public class EquityPriceMeasurementRepositoryImpl implements EquityPriceMeasurem
 
     @Override
     public List<EquityPriceMeasurement> findBySymbol(String symbol) {
-        String query = Flux.from(bucket)
+        String query = Flux.from(BUCKET_NAME)
             .range(Instant.now().minusSeconds(30 * 24 * 60 * 60))
             .filter(Restrictions.column("symbol").equal(symbol))
             .toString();
 
-        System.out.println("Executing query: " + query);
+        logger.debug("Executing findBySymbol query for symbol: {}", symbol);
         return influxDBClient.getQueryApi().query(query, EquityPriceMeasurement.class);
     }
 
@@ -141,28 +186,26 @@ public class EquityPriceMeasurementRepositoryImpl implements EquityPriceMeasurem
             "|> pivot(rowKey: [\"_time\"], " +
             "        columnKey: [\"_field\"], " +
             "        valueColumn: \"_value\") ",
-            bucket, startTime, endTime, symbol
+            BUCKET_NAME, startTime, endTime, symbol
         );
 
-        System.out.println("Executing query: " + query);
+        logger.debug("Executing findBySymbolAndTimeBetween query for symbol: {}, start: {}, end: {}", 
+            symbol, startTime, endTime);
         List<EquityPriceMeasurement> results = influxDBClient.getQueryApi().query(query, EquityPriceMeasurement.class);
+        logger.debug("Found {} results", results.size());
         
-        // Set tags since they're not included in pivot
-        results.forEach(measurement -> {
-            measurement.setSymbol(symbol);
-        });
-        
+        results.forEach(measurement -> measurement.setSymbol(symbol));
         return results;
     }
 
     @Override
     public List<EquityPriceMeasurement> findByIsin(String isin) {
-        String query = Flux.from(bucket)
+        String query = Flux.from(BUCKET_NAME)
             .range(Instant.now().minusSeconds(30 * 24 * 60 * 60))
             .filter(Restrictions.column("isin").equal(isin))
             .toString();
 
-        System.out.println("Executing query: " + query);
+        logger.debug("Executing findByIsin query for isin: {}", isin);
         return influxDBClient.getQueryApi().query(query, EquityPriceMeasurement.class);
     }
 
@@ -176,17 +219,15 @@ public class EquityPriceMeasurementRepositoryImpl implements EquityPriceMeasurem
             "|> pivot(rowKey: [\"_time\"], " +
             "        columnKey: [\"_field\"], " +
             "        valueColumn: \"_value\") ",
-            bucket, startTime, endTime, isin
+            BUCKET_NAME, startTime, endTime, isin
         );
 
-        System.out.println("Executing query: " + query);
+        logger.debug("Executing findByIsinAndTimeBetween query for isin: {}, start: {}, end: {}", 
+            isin, startTime, endTime);
         List<EquityPriceMeasurement> results = influxDBClient.getQueryApi().query(query, EquityPriceMeasurement.class);
+        logger.debug("Found {} results", results.size());
         
-        // Set tags since they're not included in pivot
-        results.forEach(measurement -> {
-            measurement.setIsin(isin);
-        });
-        
+        results.forEach(measurement -> measurement.setIsin(isin));
         return results;
     }
 
@@ -200,28 +241,31 @@ public class EquityPriceMeasurementRepositoryImpl implements EquityPriceMeasurem
             "|> pivot(rowKey: [\"_time\"], " +
             "        columnKey: [\"_field\"], " +
             "        valueColumn: \"_value\") ",
-            bucket, exchange
+            BUCKET_NAME, exchange
         );
 
-        System.out.println("Executing query: " + query);
+        logger.debug("Executing findByExchange query for exchange: {}", exchange);
         List<EquityPriceMeasurement> results = influxDBClient.getQueryApi().query(query, EquityPriceMeasurement.class);
+        logger.debug("Found {} results for exchange: {}", results.size(), exchange);
         
-        // Set tags since they're not included in pivot
-        results.forEach(measurement -> {
-            measurement.setExchange(exchange);
-        });
-        
+        results.forEach(measurement -> measurement.setExchange(exchange));
         return results;
     }
 
     @Override
     public List<EquityPriceMeasurement> findByKeyAndTimeBetween(String key, Instant startTime, Instant endTime) {
+        logger.debug("Searching for prices by key: {} between {} and {}", key, startTime, endTime);
+        
         // Try by symbol first
         List<EquityPriceMeasurement> bySymbol = findBySymbolAndTimeBetween(key, startTime, endTime);
         if (!bySymbol.isEmpty()) {
+            logger.debug("Found {} results by symbol", bySymbol.size());
             return bySymbol;
         }
+        
         // If not found by symbol, try by ISIN
-        return findByIsinAndTimeBetween(key, startTime, endTime);
+        List<EquityPriceMeasurement> byIsin = findByIsinAndTimeBetween(key, startTime, endTime);
+        logger.debug("Found {} results by ISIN", byIsin.size());
+        return byIsin;
     }
 }

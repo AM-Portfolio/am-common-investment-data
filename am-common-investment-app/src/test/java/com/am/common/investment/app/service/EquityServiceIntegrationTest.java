@@ -125,9 +125,10 @@ public class EquityServiceIntegrationTest {
             EXCHANGE_NASDAQ, CURRENCY_USD, now
         );
 
+        equityService.saveAllPrices(List.of(price1, price2));
         // When
-        equityService.savePrice(price1);
-        equityService.savePrice(price2);
+        // equityService.savePrice(price1);
+        // equityService.savePrice(price2);
         
         // Add a small delay to ensure InfluxDB processes the writes
         Thread.sleep(1000);
@@ -162,9 +163,11 @@ public class EquityServiceIntegrationTest {
         );
 
         // When
-        equityService.savePrice(applePrice);
-        equityService.savePrice(microsoftPrice);
-        equityService.savePrice(teslaPrice);
+        // equityService.savePrice(applePrice);
+        // equityService.savePrice(microsoftPrice);
+        // equityService.savePrice(teslaPrice);
+
+        equityService.saveAllPrices(List.of(applePrice, microsoftPrice, teslaPrice));
         
         // Add a small delay to ensure InfluxDB processes the writes
         Thread.sleep(1000);
