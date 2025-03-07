@@ -112,7 +112,7 @@ public class EquityPriceMeasurementRepositoryImpl implements EquityPriceMeasurem
     public Optional<EquityPriceMeasurement> findLatestByIsin(String isin) {
         String query = String.format(
             "from(bucket: \"%s\") " +
-            "|> range(start: -15m) " +
+            "|> range(start: -24h) " +
             "|> filter(fn: (r) => r._measurement == \"equity\") " +
             "|> filter(fn: (r) => r.isin == \"%s\") " +
             "|> last() " +
@@ -142,7 +142,7 @@ public class EquityPriceMeasurementRepositoryImpl implements EquityPriceMeasurem
     public Optional<EquityPriceMeasurement> findLatestBySymbol(String symbol) {
         String query = String.format(
             "from(bucket: \"%s\") " +
-            "|> range(start: -15m) " +
+            "|> range(start: -24h) " +
             "|> filter(fn: (r) => r._measurement == \"equity\") " +
             "|> filter(fn: (r) => r.symbol == \"%s\") " +
             "|> last() " +

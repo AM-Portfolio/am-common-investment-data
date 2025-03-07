@@ -9,4 +9,4 @@ spring:
 logging:
   level:
     root: INFO
-    com.am.common.investment: DEBUG
+    com.am.common.investment: INFO
