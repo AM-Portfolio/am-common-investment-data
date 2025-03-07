@@ -23,21 +23,17 @@ public interface EquityPriceMeasurementRepository extends Repository<EquityPrice
     List<EquityPriceMeasurement> findByIsin(String isin);
     List<EquityPriceMeasurement> findByIsinAndTimeBetween(String isin, Instant startTime, Instant endTime);
     
+    List<EquityPriceMeasurement> findByKeyAndTimeBetween(String key, Instant startTime, Instant endTime);
+    
     // Find by exchange and currency
     List<EquityPriceMeasurement> findByExchange(String exchange);
-    List<EquityPriceMeasurement> findByCurrency(String currency);
     
-    // Advanced queries
-    List<EquityPriceMeasurement> findByVolumeGreaterThan(Long volume);
-    List<EquityPriceMeasurement> findBySymbolAndCloseGreaterThan(String symbol, Double price);
-    
-    // Price range queries
-    List<EquityPriceMeasurement> findBySymbolAndCloseBetween(String symbol, Double minPrice, Double maxPrice);
-    
-    // Aggregation queries
-    Double findHighestPriceBySymbolAndTimeBetween(String symbol, Instant startTime, Instant endTime);
-    Double findLowestPriceBySymbolAndTimeBetween(String symbol, Instant startTime, Instant endTime);
-    Double findAverageVolumeBySymbolAndTimeBetween(String symbol, Instant startTime, Instant endTime);
-    Double findAverageClosePriceBySymbolAndTimeBetween(String symbol, Instant startTime, Instant endTime);
-
+    // Find latest by symbol or ISIN
+    default Optional<EquityPriceMeasurement> findLatestByKey(String key) {
+        Optional<EquityPriceMeasurement> bySymbol = findLatestBySymbol(key);
+        if (bySymbol.isPresent()) {
+            return bySymbol;
+        }
+        return findLatestByIsin(key);
+    }
 }

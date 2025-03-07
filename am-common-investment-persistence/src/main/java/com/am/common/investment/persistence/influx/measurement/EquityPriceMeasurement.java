@@ -21,6 +21,9 @@ public class EquityPriceMeasurement {
     
     @Column(timestamp = true, name = "time")
     private Instant time;
+
+    @Column(tag = true, name = "exchange")
+    private String exchange;
     
     @Column(name = "open")
     private Double open;
@@ -37,9 +40,6 @@ public class EquityPriceMeasurement {
     @Column(name = "volume")
     private Long volume;
     
-    @Column(name = "exchange")
-    private String exchange;
-    
-    @Column(tag = true, name = "currency")
+    @Column(name = "currency")
     private String currency;
 }

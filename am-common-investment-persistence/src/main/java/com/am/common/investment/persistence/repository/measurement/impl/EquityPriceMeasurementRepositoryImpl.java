@@ -34,26 +34,26 @@ public class EquityPriceMeasurementRepositoryImpl implements EquityPriceMeasurem
             Point point = Point.measurement("equity")
                 .addTag("symbol", measurement.getSymbol())
                 .addTag("isin", measurement.getIsin())
-                .addTag("currency", measurement.getCurrency())
+                .addTag("exchange", measurement.getExchange())
                 .addField("open", measurement.getOpen())
                 .addField("high", measurement.getHigh())
                 .addField("low", measurement.getLow())
                 .addField("close", measurement.getClose())
+                .addField("currency", measurement.getCurrency())
                 .addField("volume", measurement.getVolume())
-                .addField("exchange", measurement.getExchange())
                 .time(measurement.getTime(), WritePrecision.NS);
             
             System.out.println("Writing point to InfluxDB:");
             System.out.println("  - Measurement: equity");
             System.out.println("  - Tags: symbol=" + measurement.getSymbol() + 
                 ", isin=" + measurement.getIsin() + 
-                ", currency=" + measurement.getCurrency());
+                ", exchange=" + measurement.getExchange());
             System.out.println("  - Fields: open=" + measurement.getOpen() + 
                 ", high=" + measurement.getHigh() + 
                 ", low=" + measurement.getLow() + 
                 ", close=" + measurement.getClose() + 
                 ", volume=" + measurement.getVolume() + 
-                ", exchange=" + measurement.getExchange());
+                ", currency=" + measurement.getCurrency());
             System.out.println("  - Time: " + measurement.getTime());
             
             writeApi.writePoint(bucket, "org", point);
@@ -61,6 +61,37 @@ public class EquityPriceMeasurementRepositoryImpl implements EquityPriceMeasurem
         }
     }
 
+    @Override
+    public Optional<EquityPriceMeasurement> findLatestByIsin(String isin) {
+        String query = String.format(
+            "from(bucket: \"%s\") " +
+            "|> range(start: -15m) " +
+            "|> filter(fn: (r) => r._measurement == \"equity\") " +
+            "|> filter(fn: (r) => r.isin == \"%s\") " +
+            "|> last() " +
+            "|> pivot(rowKey: [\"_time\"], " +
+            "        columnKey: [\"_field\"], " +
+            "        valueColumn: \"_value\") ",
+            bucket, isin
+        );
+
+        System.out.println("Executing query: " + query);
+        QueryApi queryApi = influxDBClient.getQueryApi();
+        List<EquityPriceMeasurement> results = queryApi.query(query, EquityPriceMeasurement.class);
+        System.out.println("Query results: " + results);
+        
+        if (!results.isEmpty()) {
+            EquityPriceMeasurement measurement = results.get(0);
+            // Ensure all tags are set from the result
+            measurement.setIsin(isin);
+            measurement.setSymbol(results.get(0).getSymbol());
+            measurement.setCurrency(results.get(0).getCurrency());
+            measurement.setExchange(results.get(0).getExchange());
+            return Optional.of(measurement);
+        }
+        return Optional.empty();
+    }
+    
     @Override
     public Optional<EquityPriceMeasurement> findLatestBySymbol(String symbol) {
         String query = String.format(
@@ -102,28 +133,26 @@ public class EquityPriceMeasurementRepositoryImpl implements EquityPriceMeasurem
 
     @Override
     public List<EquityPriceMeasurement> findBySymbolAndTimeBetween(String symbol, Instant startTime, Instant endTime) {
-        String query = Flux.from(bucket)
-            .range(startTime, endTime)
-            .filter(Restrictions.column("symbol").equal(symbol))
-            .toString();
+        String query = String.format(
+            "from(bucket: \"%s\") " +
+            "|> range(start: %s, stop: %s) " +
+            "|> filter(fn: (r) => r._measurement == \"equity\") " +
+            "|> filter(fn: (r) => r.symbol == \"%s\") " +
+            "|> pivot(rowKey: [\"_time\"], " +
+            "        columnKey: [\"_field\"], " +
+            "        valueColumn: \"_value\") ",
+            bucket, startTime, endTime, symbol
+        );
 
         System.out.println("Executing query: " + query);
-        return influxDBClient.getQueryApi().query(query, EquityPriceMeasurement.class);
-    }
-
-    @Override
-    public Optional<EquityPriceMeasurement> findLatestByIsin(String isin) {
-        String query = Flux.from(bucket)
-            .range(Instant.now().minusSeconds(7 * 24 * 60 * 60))
-            .filter(Restrictions.column("isin").equal(isin))
-            .last()
-            .toString();
-
-        System.out.println("Executing query: " + query);
-        QueryApi queryApi = influxDBClient.getQueryApi();
-        List<EquityPriceMeasurement> results = queryApi.query(query, EquityPriceMeasurement.class);
-        System.out.println("Query results: " + results);
-        return results.isEmpty() ? Optional.empty() : Optional.of(results.get(0));
+        List<EquityPriceMeasurement> results = influxDBClient.getQueryApi().query(query, EquityPriceMeasurement.class);
+        
+        // Set tags since they're not included in pivot
+        results.forEach(measurement -> {
+            measurement.setSymbol(symbol);
+        });
+        
+        return results;
     }
 
     @Override
@@ -139,130 +168,60 @@ public class EquityPriceMeasurementRepositoryImpl implements EquityPriceMeasurem
 
     @Override
     public List<EquityPriceMeasurement> findByIsinAndTimeBetween(String isin, Instant startTime, Instant endTime) {
-        String query = Flux.from(bucket)
-            .range(startTime, endTime)
-            .filter(Restrictions.column("isin").equal(isin))
-            .toString();
+        String query = String.format(
+            "from(bucket: \"%s\") " +
+            "|> range(start: %s, stop: %s) " +
+            "|> filter(fn: (r) => r._measurement == \"equity\") " +
+            "|> filter(fn: (r) => r.isin == \"%s\") " +
+            "|> pivot(rowKey: [\"_time\"], " +
+            "        columnKey: [\"_field\"], " +
+            "        valueColumn: \"_value\") ",
+            bucket, startTime, endTime, isin
+        );
 
         System.out.println("Executing query: " + query);
-        return influxDBClient.getQueryApi().query(query, EquityPriceMeasurement.class);
+        List<EquityPriceMeasurement> results = influxDBClient.getQueryApi().query(query, EquityPriceMeasurement.class);
+        
+        // Set tags since they're not included in pivot
+        results.forEach(measurement -> {
+            measurement.setIsin(isin);
+        });
+        
+        return results;
     }
 
     @Override
     public List<EquityPriceMeasurement> findByExchange(String exchange) {
-        String query = Flux.from(bucket)
-            .range(Instant.now().minusSeconds(24 * 60 * 60))
-            .filter(Restrictions.column("exchange").equal(exchange))
-            .toString();
+        String query = String.format(
+            "from(bucket: \"%s\") " +
+            "|> range(start: -24h) " +
+            "|> filter(fn: (r) => r._measurement == \"equity\") " +
+            "|> filter(fn: (r) => r.exchange == \"%s\") " +
+            "|> pivot(rowKey: [\"_time\"], " +
+            "        columnKey: [\"_field\"], " +
+            "        valueColumn: \"_value\") ",
+            bucket, exchange
+        );
 
         System.out.println("Executing query: " + query);
-        return influxDBClient.getQueryApi().query(query, EquityPriceMeasurement.class);
+        List<EquityPriceMeasurement> results = influxDBClient.getQueryApi().query(query, EquityPriceMeasurement.class);
+        
+        // Set tags since they're not included in pivot
+        results.forEach(measurement -> {
+            measurement.setExchange(exchange);
+        });
+        
+        return results;
     }
 
     @Override
-    public List<EquityPriceMeasurement> findByCurrency(String currency) {
-        String query = Flux.from(bucket)
-            .range(Instant.now().minusSeconds(24 * 60 * 60))
-            .filter(Restrictions.column("currency").equal(currency))
-            .toString();
-
-        System.out.println("Executing query: " + query);
-        return influxDBClient.getQueryApi().query(query, EquityPriceMeasurement.class);
-    }
-
-    @Override
-    public List<EquityPriceMeasurement> findByVolumeGreaterThan(Long volume) {
-        String query = Flux.from(bucket)
-            .range(Instant.now().minusSeconds(24 * 60 * 60))
-            .filter(Restrictions.column("volume").greater(volume))
-            .toString();
-
-        System.out.println("Executing query: " + query);
-        return influxDBClient.getQueryApi().query(query, EquityPriceMeasurement.class);
-    }
-
-    @Override
-    public List<EquityPriceMeasurement> findBySymbolAndCloseGreaterThan(String symbol, Double price) {
-        String query = Flux.from(bucket)
-            .range(Instant.now().minusSeconds(30 * 24 * 60 * 60))
-            .filter(Restrictions.and(
-                Restrictions.column("symbol").equal(symbol),
-                Restrictions.column("close").greater(price)
-            ))
-            .toString();
-
-        System.out.println("Executing query: " + query);
-        return influxDBClient.getQueryApi().query(query, EquityPriceMeasurement.class);
-    }
-
-    @Override
-    public List<EquityPriceMeasurement> findBySymbolAndCloseBetween(String symbol, Double minPrice, Double maxPrice) {
-        String query = Flux.from(bucket)
-            .range(Instant.now().minusSeconds(30 * 24 * 60 * 60))
-            .filter(Restrictions.and(
-                Restrictions.column("symbol").equal(symbol),
-                Restrictions.column("close").greater(minPrice),
-                Restrictions.column("close").less(maxPrice)
-            ))
-            .toString();
-
-        System.out.println("Executing query: " + query);
-        return influxDBClient.getQueryApi().query(query, EquityPriceMeasurement.class);
-    }
-
-    @Override
-    public Double findHighestPriceBySymbolAndTimeBetween(String symbol, Instant startTime, Instant endTime) {
-        String query = Flux.from(bucket)
-            .range(startTime, endTime)
-            .filter(Restrictions.column("symbol").equal(symbol))
-            .max("high")
-            .toString();
-
-        System.out.println("Executing query: " + query);
-        List<Double> results = influxDBClient.getQueryApi().query(query, Double.class);
-        System.out.println("Query results: " + results);
-        return results.isEmpty() ? null : results.get(0);
-    }
-
-    @Override
-    public Double findLowestPriceBySymbolAndTimeBetween(String symbol, Instant startTime, Instant endTime) {
-        String query = Flux.from(bucket)
-            .range(startTime, endTime)
-            .filter(Restrictions.column("symbol").equal(symbol))
-            .min("low")
-            .toString();
-
-        System.out.println("Executing query: " + query);
-        List<Double> results = influxDBClient.getQueryApi().query(query, Double.class);
-        System.out.println("Query results: " + results);
-        return results.isEmpty() ? null : results.get(0);
-    }
-
-    @Override
-    public Double findAverageVolumeBySymbolAndTimeBetween(String symbol, Instant startTime, Instant endTime) {
-        String query = Flux.from(bucket)
-            .range(startTime, endTime)
-            .filter(Restrictions.column("symbol").equal(symbol))
-            .mean("volume")
-            .toString();
-
-        System.out.println("Executing query: " + query);
-        List<Double> results = influxDBClient.getQueryApi().query(query, Double.class);
-        System.out.println("Query results: " + results);
-        return results.isEmpty() ? null : results.get(0);
-    }
-
-    @Override
-    public Double findAverageClosePriceBySymbolAndTimeBetween(String symbol, Instant startTime, Instant endTime) {
-        String query = Flux.from(bucket)
-            .range(startTime, endTime)
-            .filter(Restrictions.column("symbol").equal(symbol))
-            .mean("close")
-            .toString();
-
-        System.out.println("Executing query: " + query);
-        List<Double> results = influxDBClient.getQueryApi().query(query, Double.class);
-        System.out.println("Query results: " + results);
-        return results.isEmpty() ? null : results.get(0);
+    public List<EquityPriceMeasurement> findByKeyAndTimeBetween(String key, Instant startTime, Instant endTime) {
+        // Try by symbol first
+        List<EquityPriceMeasurement> bySymbol = findBySymbolAndTimeBetween(key, startTime, endTime);
+        if (!bySymbol.isEmpty()) {
+            return bySymbol;
+        }
+        // If not found by symbol, try by ISIN
+        return findByIsinAndTimeBetween(key, startTime, endTime);
     }
 }

@@ -9,10 +9,7 @@ import java.util.Optional;
 public interface EquityService {
     // Price methods
     void savePrice(EquityPrice price);
-    Optional<EquityPrice> getLatestPrice(String symbol);
-    List<EquityPrice> getPriceHistory(String symbol, Instant startTime, Instant endTime);
+    Optional<EquityPrice> getLatestPriceByKey(String key);
+    List<EquityPrice> getPriceHistoryByKey(String key, Instant startTime, Instant endTime);
     List<EquityPrice> getPricesByExchange(String exchange);
-    Double getHighestPrice(String symbol, Instant startTime, Instant endTime);
-    Double getLowestPrice(String symbol, Instant startTime, Instant endTime);
-    Double getAverageVolume(String symbol, Instant startTime, Instant endTime);
 }

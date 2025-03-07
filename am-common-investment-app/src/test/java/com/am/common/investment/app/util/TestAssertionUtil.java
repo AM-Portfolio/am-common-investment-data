@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 public class TestAssertionUtil {
     
@@ -22,6 +24,26 @@ public class TestAssertionUtil {
         assertThat(price.getExchange()).isEqualTo(expected.getExchange());
         assertThat(price.getCurrency()).isEqualTo(expected.getCurrency());
         assertThat(price.getTime()).isEqualTo(expected.getTime());
+    }
+
+    public static void assertEquityPriceList(List<EquityPrice> actual, List<EquityPrice> expected) {
+        assertEquals("List sizes should match", expected.size(), actual.size());
+        
+        for (int i = 0; i < expected.size(); i++) {
+            EquityPrice expectedPrice = expected.get(i);
+            EquityPrice actualPrice = actual.get(i);
+            
+            assertEquals("Symbol should match", expectedPrice.getSymbol(), actualPrice.getSymbol());
+            assertEquals("ISIN should match", expectedPrice.getIsin(), actualPrice.getIsin());
+            assertEquals("Open price should match", expectedPrice.getOpen(), actualPrice.getOpen(), 0.001);
+            assertEquals("High price should match", expectedPrice.getHigh(), actualPrice.getHigh(), 0.001);
+            assertEquals("Low price should match", expectedPrice.getLow(), actualPrice.getLow(), 0.001);
+            assertEquals("Close price should match", expectedPrice.getClose(), actualPrice.getClose(), 0.001);
+            assertEquals("Volume should match", expectedPrice.getVolume(), actualPrice.getVolume());
+            assertEquals("Exchange should match", expectedPrice.getExchange(), actualPrice.getExchange());
+            assertEquals("Currency should match", expectedPrice.getCurrency(), actualPrice.getCurrency());
+            assertNotNull("Time should not be null", actualPrice.getTime());
+        }
     }
 
     public static void assertEquityPriceHistory(List<EquityPrice> actual, List<EquityPrice> expected) {

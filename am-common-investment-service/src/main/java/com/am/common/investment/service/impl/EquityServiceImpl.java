@@ -25,14 +25,14 @@ public class EquityServiceImpl implements EquityService {
     }
 
     @Override
-    public Optional<EquityPrice> getLatestPrice(String symbol) {
-        return priceRepository.findLatestBySymbol(symbol)
+    public Optional<EquityPrice> getLatestPriceByKey(String key) {
+        return priceRepository.findLatestByKey(key)
             .map(mapper::toModel);
     }
 
     @Override
-    public List<EquityPrice> getPriceHistory(String symbol, Instant startTime, Instant endTime) {
-        return priceRepository.findBySymbolAndTimeBetween(symbol, startTime, endTime)
+    public List<EquityPrice> getPriceHistoryByKey(String key, Instant startTime, Instant endTime) {
+        return priceRepository.findByKeyAndTimeBetween(key, startTime, endTime)
             .stream()
             .map(mapper::toModel)
             .collect(Collectors.toList());
@@ -44,21 +44,6 @@ public class EquityServiceImpl implements EquityService {
             .stream()
             .map(mapper::toModel)
             .collect(Collectors.toList());
-    }
-
-    @Override
-    public Double getHighestPrice(String symbol, Instant startTime, Instant endTime) {
-        return priceRepository.findHighestPriceBySymbolAndTimeBetween(symbol, startTime, endTime);
-    }
-
-    @Override
-    public Double getLowestPrice(String symbol, Instant startTime, Instant endTime) {
-        return priceRepository.findLowestPriceBySymbolAndTimeBetween(symbol, startTime, endTime);
-    }
-
-    @Override
-    public Double getAverageVolume(String symbol, Instant startTime, Instant endTime) {
-        return priceRepository.findAverageVolumeBySymbolAndTimeBetween(symbol, startTime, endTime);
     }
 
 }
