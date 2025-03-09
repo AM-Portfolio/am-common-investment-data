@@ -9,7 +9,7 @@ import java.util.Optional;
 public interface EquityService {
     // Price methods
     void savePrice(EquityPrice price);
-    
+
     void saveAllPrices(List<EquityPrice> prices);
 
     Optional<EquityPrice> getLatestPriceByKey(String key);
