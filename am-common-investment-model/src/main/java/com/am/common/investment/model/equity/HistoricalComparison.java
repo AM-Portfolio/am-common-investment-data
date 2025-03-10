@@ -7,10 +7,13 @@ import lombok.AllArgsConstructor;
 
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class HistoricalComparison {
     private Double value;
     private Double perChange365d;

@@ -14,6 +14,7 @@ import com.influxdb.query.dsl.functions.restriction.Restrictions;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
 import java.time.Instant;
@@ -26,12 +27,17 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class EquityPriceMeasurementRepositoryImpl implements EquityPriceMeasurementRepository {
     private static final Logger logger = LoggerFactory.getLogger(EquityPriceMeasurementRepositoryImpl.class);
-    private static final String MEASUREMENT_NAME = "equity";
-    private static final String BUCKET_NAME = "investment_data";
+    private static final String BUCKET_NAME = "market_data";
     private static final int BATCH_SIZE = 5000;
     private static final int FLUSH_INTERVAL = 1000; // milliseconds
 
     private final InfluxDBClient influxDBClient;
+
+    @Value("${spring.influx.bucket}")
+    private String bucket;
+
+    @Value("${spring.influx.org}")
+    private String org;
 
     @Override
     public void save(EquityPriceMeasurement measurement) {
@@ -61,7 +67,7 @@ public class EquityPriceMeasurementRepositoryImpl implements EquityPriceMeasurem
                 ", currency=" + measurement.getCurrency());
             System.out.println("  - Time: " + measurement.getTime());
             
-            writeApi.writePoint(BUCKET_NAME, "org", point);
+            writeApi.writePoint(BUCKET_NAME, org, point);
             writeApi.flush();
         }
     }

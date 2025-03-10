@@ -3,7 +3,9 @@ package com.am.common.investment.app.config;
 import static com.am.common.investment.app.constant.AppConstants.InfluxDB.*;
 
 import com.am.common.investment.persistence.repository.measurement.EquityPriceMeasurementRepository;
+import com.am.common.investment.persistence.repository.measurement.MarketIndexIndicesRepository;
 import com.am.common.investment.persistence.repository.measurement.impl.EquityPriceMeasurementRepositoryImpl;
+import com.am.common.investment.persistence.repository.measurement.impl.MarketIndexIndicesRepositoryImpl;
 import com.influxdb.client.InfluxDBClient;
 import com.influxdb.client.InfluxDBClientFactory;
 import org.junit.jupiter.api.AfterEach;
@@ -33,7 +35,7 @@ import org.testcontainers.utility.DockerImageName;
 public class TestContainersConfig implements AfterEachCallback {
 
     private static final String ADMIN_TOKEN = "my-super-secret-admin-token";
-    private static final String ORG = "org";
+    private static final String ORG = "am_investment";
     private static final String BUCKET = "investment_data";
 
     @Container
@@ -69,6 +71,13 @@ public class TestContainersConfig implements AfterEachCallback {
     @ConditionalOnMissingBean
     public EquityPriceMeasurementRepository equityPriceMeasurementRepository(InfluxDBClient influxDBClient) {
         return new EquityPriceMeasurementRepositoryImpl(influxDBClient);
+    }
+
+    @Bean
+    @Primary
+    @ConditionalOnMissingBean
+    public MarketIndexIndicesRepository marketIndexRepository(InfluxDBClient influxDBClient) {
+        return new MarketIndexIndicesRepositoryImpl(influxDBClient);
     }
 
     @DynamicPropertySource

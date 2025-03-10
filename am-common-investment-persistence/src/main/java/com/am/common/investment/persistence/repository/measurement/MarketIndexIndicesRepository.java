@@ -12,20 +12,5 @@ public interface MarketIndexIndicesRepository extends Repository<MarketIndexIndi
     
     // Basic CRUD operations
     void save(MarketIndexIndicesMeasurement measurement);
-    void saveAll(List<MarketIndexIndicesMeasurement> measurements);
-    
-    // Find by index
-    Optional<MarketIndexIndicesMeasurement> findLatestByIndex(String index);
-    List<MarketIndexIndicesMeasurement> findByIndex(String index);
-    List<MarketIndexIndicesMeasurement> findByIndexAndTimeBetween(String index, Instant startTime, Instant endTime);
-    
-    // Find by index symbol
-    Optional<MarketIndexIndicesMeasurement> findLatestByIndexSymbol(String indexSymbol);
-    List<MarketIndexIndicesMeasurement> findByIndexSymbol(String indexSymbol);
-    List<MarketIndexIndicesMeasurement> findByIndexSymbolAndTimeBetween(String indexSymbol, Instant startTime, Instant endTime);
-
-    // Find by key
-    Optional<MarketIndexIndicesMeasurement> findLatestByKey(String key);
     List<MarketIndexIndicesMeasurement> findByKey(String key);
-    List<MarketIndexIndicesMeasurement> findByKeyAndTimeRange(String key, Instant startTime, Instant endTime);
 }

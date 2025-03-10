@@ -15,14 +15,11 @@ import lombok.AllArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class MarketIndexIndices {
-    private String key;
-    private String index;
-    private String indexSymbol;
+public class ETFIndies {
+    private String assets;
+    private String symbol;
+    private MetaData metaData;
     private MarketData marketData;
-    private FundamentalRatios fundamentalRatios;
     private MarketBreadth marketBreadth;
-    private HistoricalComparison historicalComparison;
-    private ChartPaths chartPaths;
     private LocalDateTime timestamp;
 }

@@ -2,8 +2,8 @@ spring:
   influx:
     url: http://localhost:8086
     token: my-super-secret-auth-token
-    org: org
-    bucket: investment_data
+    org: am_investment
+    bucket: market_data
 
 
 logging:
