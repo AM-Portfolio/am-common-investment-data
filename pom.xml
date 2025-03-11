@@ -9,6 +9,7 @@
     <version>1.5.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
+         
     <modules>
         <module>am-common-investment-model</module>
         <module>am-common-investment-persistence</module>
