@@ -17,6 +17,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -32,6 +33,19 @@ public class EquityPriceMeasurementRepositoryImpl implements EquityPriceMeasurem
     private static final int FLUSH_INTERVAL = 1000; // milliseconds
 
     private final InfluxDBClient influxDBClient;
+    private final EquityRangeConfig rangeConfig;
+
+    private Instant parseRange(String range) {
+        String value = range.substring(1, range.length() - 1);
+        long amount = Long.parseLong(value);
+        ChronoUnit unit = switch (range.charAt(range.length() - 1)) {
+            case 'h' -> ChronoUnit.HOURS;
+            case 'd' -> ChronoUnit.DAYS;
+            case 'w' -> ChronoUnit.WEEKS;
+            default -> throw new IllegalArgumentException("Unsupported time unit: " + range);
+        };
+        return Instant.now().minus(amount, unit);
+    }
 
     @Override
     public void save(EquityPriceMeasurement measurement) {
@@ -112,14 +126,14 @@ public class EquityPriceMeasurementRepositoryImpl implements EquityPriceMeasurem
     public Optional<EquityPriceMeasurement> findLatestByIsin(String isin) {
         String query = String.format(
             "from(bucket: \"%s\") " +
-            "|> range(start: -24h) " +
+            "|> range(start: %s) " +
             "|> filter(fn: (r) => r._measurement == \"equity\") " +
             "|> filter(fn: (r) => r.isin == \"%s\") " +
             "|> last() " +
             "|> pivot(rowKey: [\"_time\"], " +
             "        columnKey: [\"_field\"], " +
             "        valueColumn: \"_value\") ",
-            BUCKET_NAME, isin
+            BUCKET_NAME, parseRange(rangeConfig.getDefaultRange()), isin
         );
 
         logger.debug("Executing findLatestByIsin query for isin: {}", isin);
@@ -142,14 +156,14 @@ public class EquityPriceMeasurementRepositoryImpl implements EquityPriceMeasurem
     public Optional<EquityPriceMeasurement> findLatestBySymbol(String symbol) {
         String query = String.format(
             "from(bucket: \"%s\") " +
-            "|> range(start: -24h) " +
+            "|> range(start: %s) " +
             "|> filter(fn: (r) => r._measurement == \"equity\") " +
             "|> filter(fn: (r) => r.symbol == \"%s\") " +
             "|> last() " +
             "|> pivot(rowKey: [\"_time\"], " +
             "        columnKey: [\"_field\"], " +
             "        valueColumn: \"_value\") ",
-            BUCKET_NAME, symbol
+            BUCKET_NAME, parseRange(rangeConfig.getDefaultRange()), symbol
         );
 
         logger.debug("Executing findLatestBySymbol query for symbol: {}", symbol);
@@ -168,7 +182,7 @@ public class EquityPriceMeasurementRepositoryImpl implements EquityPriceMeasurem
     @Override
     public List<EquityPriceMeasurement> findBySymbol(String symbol) {
         String query = Flux.from(BUCKET_NAME)
-            .range(Instant.now().minusSeconds(30 * 24 * 60 * 60))
+            .range(parseRange(rangeConfig.getHistoryRange()))
             .filter(Restrictions.column("symbol").equal(symbol))
             .toString();
 
@@ -201,7 +215,7 @@ public class EquityPriceMeasurementRepositoryImpl implements EquityPriceMeasurem
     @Override
     public List<EquityPriceMeasurement> findByIsin(String isin) {
         String query = Flux.from(BUCKET_NAME)
-            .range(Instant.now().minusSeconds(30 * 24 * 60 * 60))
+            .range(parseRange(rangeConfig.getHistoryRange()))
             .filter(Restrictions.column("isin").equal(isin))
             .toString();
 
@@ -235,13 +249,13 @@ public class EquityPriceMeasurementRepositoryImpl implements EquityPriceMeasurem
     public List<EquityPriceMeasurement> findByExchange(String exchange) {
         String query = String.format(
             "from(bucket: \"%s\") " +
-            "|> range(start: -24h) " +
+            "|> range(start: %s) " +
             "|> filter(fn: (r) => r._measurement == \"equity\") " +
             "|> filter(fn: (r) => r.exchange == \"%s\") " +
             "|> pivot(rowKey: [\"_time\"], " +
             "        columnKey: [\"_field\"], " +
             "        valueColumn: \"_value\") ",
-            BUCKET_NAME, exchange
+            BUCKET_NAME, parseRange(rangeConfig.getDefaultRange()), exchange
         );
 
         logger.debug("Executing findByExchange query for exchange: {}", exchange);

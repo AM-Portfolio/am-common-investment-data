@@ -14,15 +14,9 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class EquityPrice {
+public class MetaData {
     private String symbol;
     private String isin;
-    private Instant time;
-    private Double open;
-    private Double high;
-    private Double low;
-    private Double close;
-    private Long volume;
-    private String exchange;
-    private String currency;
+    private String companyName;
+    private String industry;
 }

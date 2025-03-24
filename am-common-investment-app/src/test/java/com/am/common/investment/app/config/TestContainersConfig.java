@@ -4,6 +4,7 @@ import static com.am.common.investment.app.constant.AppConstants.InfluxDB.*;
 
 import com.am.common.investment.persistence.repository.measurement.EquityPriceMeasurementRepository;
 import com.am.common.investment.persistence.repository.measurement.impl.EquityPriceMeasurementRepositoryImpl;
+import com.am.common.investment.persistence.repository.measurement.impl.EquityRangeConfig;
 import com.influxdb.client.InfluxDBClient;
 import com.influxdb.client.InfluxDBClientFactory;
 import org.junit.jupiter.api.AfterEach;
@@ -67,8 +68,18 @@ public class TestContainersConfig implements AfterEachCallback {
     @Bean
     @Primary
     @ConditionalOnMissingBean
-    public EquityPriceMeasurementRepository equityPriceMeasurementRepository(InfluxDBClient influxDBClient) {
-        return new EquityPriceMeasurementRepositoryImpl(influxDBClient);
+    public EquityRangeConfig equityRangeConfig() {
+        EquityRangeConfig config = new EquityRangeConfig();
+        config.setDefaultRange("-24h");
+        config.setHistoryRange("-30d");
+        return config;
+    }
+
+    @Bean
+    @Primary
+    @ConditionalOnMissingBean
+    public EquityPriceMeasurementRepository equityPriceMeasurementRepository(InfluxDBClient influxDBClient, EquityRangeConfig rangeConfig) {
+        return new EquityPriceMeasurementRepositoryImpl(influxDBClient, rangeConfig);
     }
 
     @DynamicPropertySource
