@@ -23,5 +23,7 @@ public class StockData {
     private String series;
     private String name;
     private Long ffmc;
-    private Metadata metadata;
+    private String companyName;
+    private String isin;
+    private String industry;
 }

@@ -8,9 +8,12 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import com.am.common.investment.model.events.StockInsidicesEventData.IndexMetadata;
 import com.am.common.investment.model.stockindice.AuditData;
-import com.am.common.investment.model.stockindice.Metadata;
 import com.am.common.investment.model.stockindice.StockData;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 import java.util.List;
 import java.util.UUID;
@@ -23,13 +26,15 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Document(collection = "stock_indices_market_data")
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class StockIndicesMarketDataDocument {
     
     @Id
     private UUID id;
     private String indexSymbol;
     private List<StockData> data;
-    private Metadata metadata;
-    private AuditData audit;
+    private IndexMetadata metadata;
     private String docVersion;
+    private AuditData audit;
 }

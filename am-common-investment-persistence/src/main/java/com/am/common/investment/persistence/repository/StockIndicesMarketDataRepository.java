@@ -24,5 +24,5 @@ public interface StockIndicesMarketDataRepository extends MongoRepository<StockI
      * @param indexSymbols Set of index symbols to search for
      * @return Page of matching documents sorted by updatedAt in descending order
      */
-    Page<StockIndicesMarketDataDocument> findByIndexSymbolInOrderByUpdatedAtDesc(Set<String> indexSymbols, Pageable pageable);
+    Page<StockIndicesMarketDataDocument> findByIndexSymbolInOrderByAuditUpdatedAtDesc(Set<String> indexSymbols, Pageable pageable);
 }

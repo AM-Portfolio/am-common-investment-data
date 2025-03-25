@@ -34,6 +34,7 @@ public class StockInsidicesEventData {
 
     @Data
     @AllArgsConstructor
+    @NoArgsConstructor
     @SuperBuilder
     @JsonInclude(JsonInclude.Include.NON_NULL)
     @JsonIgnoreProperties(ignoreUnknown = true)
@@ -45,6 +46,7 @@ public class StockInsidicesEventData {
 
     @Data
     @AllArgsConstructor
+    @NoArgsConstructor
     @SuperBuilder
     @JsonInclude(JsonInclude.Include.NON_NULL)
     @JsonIgnoreProperties(ignoreUnknown = true)
@@ -76,8 +78,9 @@ public class StockInsidicesEventData {
     }
 
     @Data
-    @SuperBuilder
     @AllArgsConstructor
+    @NoArgsConstructor
+    @SuperBuilder
     @JsonInclude(JsonInclude.Include.NON_NULL)
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Metadata {
@@ -90,8 +93,9 @@ public class StockInsidicesEventData {
 
     
     @Data
-    @SuperBuilder
     @AllArgsConstructor
+    @NoArgsConstructor
+    @SuperBuilder
     @JsonInclude(JsonInclude.Include.NON_NULL)
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class IndexMetadata {
@@ -114,8 +118,9 @@ public class StockInsidicesEventData {
     }
 
     @Data
-    @SuperBuilder
     @AllArgsConstructor
+    @NoArgsConstructor
+    @SuperBuilder
     @JsonInclude(JsonInclude.Include.NON_NULL)
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class MarketStatus {

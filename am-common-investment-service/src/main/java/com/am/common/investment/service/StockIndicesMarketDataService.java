@@ -33,11 +33,4 @@ public interface StockIndicesMarketDataService {
      * @return List of matching market data
      */
     StockIndicesMarketData findByIndexSymbol(String symbol);
-
-    /**
-     * Delete stock indices market data by id
-     * 
-     * @param id The id of the market data to delete
-     */
-    void deleteById(String id);
 }

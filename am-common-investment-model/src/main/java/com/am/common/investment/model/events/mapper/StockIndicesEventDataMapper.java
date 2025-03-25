@@ -4,10 +4,7 @@ import com.am.common.investment.model.events.StockInsidicesEventData;
 import com.am.common.investment.model.events.StockInsidicesEventData.IndexMetadata;
 import com.am.common.investment.model.stockindice.StockIndicesMarketData;
 import com.am.common.investment.model.stockindice.StockData;
-import com.am.common.investment.model.stockindice.Metadata;
 import com.am.common.investment.model.stockindice.AuditData;
-
-import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -18,10 +15,9 @@ import java.util.Optional;
 /**
  * Mapper to convert between StockInsidicesEventData and StockIndicesMarketData
  */
-@RequiredArgsConstructor
 public class StockIndicesEventDataMapper {
     
-    public StockIndicesMarketData toMarketData(StockInsidicesEventData eventData) {
+    public static StockIndicesMarketData toMarketData(StockInsidicesEventData eventData) {
         if (eventData == null) {
             return null;
         }
@@ -37,7 +33,7 @@ public class StockIndicesEventDataMapper {
                 .data(Optional.ofNullable(eventData.getData())
                         .orElse(List.of())
                         .stream()
-                        .map(this::mapStockData)
+                        .map(StockIndicesEventDataMapper::mapStockData)
                         .collect(Collectors.toList()))
                 .metadata(mapIndexMetadata(eventData.getMetadata()))
                 .docVersion("1.0")
@@ -45,7 +41,7 @@ public class StockIndicesEventDataMapper {
                 .build();
     }
 
-    private IndexMetadata mapIndexMetadata(StockInsidicesEventData.IndexMetadata metadata) {
+    private static IndexMetadata mapIndexMetadata(StockInsidicesEventData.IndexMetadata metadata) {
         if (metadata == null) {
             return null;
         }
@@ -69,32 +65,25 @@ public class StockIndicesEventDataMapper {
                 .build();   
     }
 
-    private StockData mapStockData(StockInsidicesEventData.StockData stockData) {
+    private static StockData mapStockData(StockInsidicesEventData.StockData stockData) {
         if (stockData == null) {
             return null;
         }
         
-        return StockData.builder()
+        StockData.StockDataBuilder stockDataBuilder = StockData.builder()
                 .symbol(stockData.getSymbol())
                 .identifier(stockData.getIdentifier())
                 .series(stockData.getSeries())
                 .name(stockData.getSymbol()) // Using symbol as name if needed
-                .ffmc(stockData.getFfmc() != null ? stockData.getFfmc().longValue() : null)
-                .metadata(createStockMetadata(stockData.getMetadata()))
-                .build();
-    }
+                .ffmc(stockData.getFfmc() != null ? stockData.getFfmc().longValue() : null);
 
-    private Metadata createStockMetadata(StockInsidicesEventData.Metadata metadata) {
-        if (metadata == null) {
-            return null;
+        if (stockData.getMetadata() != null) {
+            stockDataBuilder
+                    .companyName(stockData.getMetadata().getCompanyName())
+                    .isin(stockData.getMetadata().getIsin())
+                    .industry(stockData.getMetadata().getIndustry());
         }
-        
-        return Metadata.builder()
-                .symbol(metadata.getSymbol())
-                .companyName(metadata.getCompanyName())
-                .industry(metadata.getIndustry())
-                .activeSeries(metadata.getActiveSeries())
-                .isin(metadata.getIsin())
-                .build();
+
+        return stockDataBuilder.build();
     }
 }

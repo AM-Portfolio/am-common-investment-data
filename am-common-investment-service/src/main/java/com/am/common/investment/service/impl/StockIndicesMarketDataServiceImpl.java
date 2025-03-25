@@ -49,41 +49,33 @@ public class StockIndicesMarketDataServiceImpl implements StockIndicesMarketData
             document.getAudit().setCreatedAt(LocalDateTime.now());
         }
         document.getAudit().setUpdatedAt(LocalDateTime.now());
-        
-        // Save the document
-        StockIndicesMarketDataDocument savedDocument = repository.save(document);
-        
-        return mapper.toModel(savedDocument);
-    }
 
-    @Override
-    public List<StockIndicesMarketData> findByIndexSymbols(Set<String> indexSymbols) {
-        log.debug("Finding stock indices market data by index symbols: {}", indexSymbols);
-        
-        // Use pagination to handle large datasets
-        Pageable pageable = PageRequest.of(0, DEFAULT_PAGE_SIZE, Sort.by(Sort.Direction.DESC, "audit.updatedAt"));
-        Page<StockIndicesMarketDataDocument> documents = repository.findByIndexSymbolInOrderByUpdatedAtDesc(indexSymbols, pageable);
-        
-        return documents.getContent().stream()
-                .map(mapper::toModel)
-                .collect(Collectors.toList());
+        StockIndicesMarketDataDocument saved = repository.save(document);
+        return mapper.toModel(saved);
     }
 
     @Override
     public StockIndicesMarketData findByIndexSymbol(String symbol) {
-        log.debug("Finding stock indices market data by index symbol: {}", symbol);
+        log.debug("Finding stock indices market data for symbol: {}", symbol);
         
-        Page<StockIndicesMarketDataDocument> documents = repository.findByIndexSymbolInOrderByUpdatedAtDesc(Set.of(symbol), PageRequest.of(0, DEFAULT_PAGE_SIZE));
-        return documents.getContent().stream()
-                .map(mapper::toModel)
-                .findFirst()
-                .orElse(null);
+        Pageable pageable = PageRequest.of(0, DEFAULT_PAGE_SIZE, Sort.by(Sort.Direction.DESC, "audit.updatedAt"));
+        Page<StockIndicesMarketDataDocument> page = repository.findByIndexSymbolInOrderByAuditUpdatedAtDesc(Set.of(symbol), pageable);
+        
+        if (page.hasContent()) {
+            return mapper.toModel(page.getContent().get(0));
+        }
+        return null;
     }
 
     @Override
-    public void deleteById(String id) {
-        log.debug("Deleting stock indices market data by id: {}", id);
+    public List<StockIndicesMarketData> findByIndexSymbols(Set<String> symbols) {
+        log.debug("Finding stock indices market data for symbols: {}", symbols);
         
-        repository.deleteById(UUID.fromString(id));
+        Pageable pageable = PageRequest.of(0, DEFAULT_PAGE_SIZE * symbols.size(), Sort.by(Sort.Direction.DESC, "audit.updatedAt"));
+        Page<StockIndicesMarketDataDocument> page = repository.findByIndexSymbolInOrderByAuditUpdatedAtDesc(symbols, pageable);
+        
+        return page.getContent().stream()
+            .map(mapper::toModel)
+            .collect(Collectors.toList());
     }
 }

@@ -3,7 +3,6 @@ package com.am.common.investment.service.mapper;
 import com.am.common.investment.model.stockindice.StockIndicesMarketData;
 import com.am.common.investment.persistence.document.StockIndicesMarketDataDocument;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
 import java.util.List;
