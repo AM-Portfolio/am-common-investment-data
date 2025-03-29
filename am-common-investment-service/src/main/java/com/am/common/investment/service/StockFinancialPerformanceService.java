@@ -13,8 +13,8 @@ import java.util.Optional;
  * Service for managing stock financial performance data
  */
 public interface StockFinancialPerformanceService {
-    Optional<BoardOfDirectors> getStockFinancialPerformanceByCompanyId(String companyId);
-    BoardOfDirectors saveStockFinancialPerformance(BoardOfDirectors stockFinancialPerformance);
+    Optional<BoardOfDirectors> getBoardOfDirectors(String symbol);
+    BoardOfDirectors saveBoardOfDirectors(BoardOfDirectors boardOfDirectors);
 
     Optional<ProfitAndLoss> getProfitAndLoss(String symbol);
     ProfitAndLoss saveProfitAndLoss(ProfitAndLoss profitAndLoss);

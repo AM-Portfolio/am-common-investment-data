@@ -14,8 +14,10 @@ import com.am.common.investment.persistence.document.stock.financial.profitandlo
 import com.am.common.investment.persistence.document.stock.financial.result.FinancialResultDocument;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
+import org.springframework.stereotype.Component;
 
-@Mapper(uses = BaseMapper.class)
+@Mapper(componentModel = "spring", uses = BaseMapper.class)
+@Component
 public interface StockFinancialPerformanceMapper {
     StockFinancialPerformanceMapper INSTANCE = Mappers.getMapper(StockFinancialPerformanceMapper.class);
 

@@ -30,7 +30,7 @@ public class BaseDocument {
     private UUID id;
     @Indexed
     private String symbol;
-
+    
     private String docVersion;
     private AuditData audit;
     private String source;

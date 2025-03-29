@@ -43,15 +43,15 @@ public class StockFinancialPerformanceServiceImpl implements StockFinancialPerfo
     private final StockFinancialPerformanceMapper mapper;
     
     @Override
-    public Optional<BoardOfDirectors> getStockFinancialPerformanceByCompanyId(String companyId) {
-        Optional<BoardOfDirectorsDocument> document = boardOfDirectorsRepository.findBySymbolWithVersionAndTime(companyId);
+    public Optional<BoardOfDirectors> getBoardOfDirectors(String symbol) {
+        Optional<BoardOfDirectorsDocument> document = boardOfDirectorsRepository.findBySymbolWithVersionAndTime(symbol);
         return document.map(mapper::toModel);
     }
     
     @Override
     @Transactional
-    public BoardOfDirectors saveStockFinancialPerformance(BoardOfDirectors stockFinancialPerformance) {
-        BoardOfDirectorsDocument document = mapper.toDocument(stockFinancialPerformance);
+    public BoardOfDirectors saveBoardOfDirectors(BoardOfDirectors boardOfDirectors) {
+        BoardOfDirectorsDocument document = mapper.toDocument(boardOfDirectors);
         BoardOfDirectorsDocument savedDocument = boardOfDirectorsRepository.save(document);
         return mapper.toModel(savedDocument);
     }
