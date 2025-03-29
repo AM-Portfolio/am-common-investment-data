@@ -1,11 +1,14 @@
-package com.am.common.investment.model.equity.financial.profitandloss;
+package com.am.common.investment.persistence.document.stock.financial.result;
 
-import com.am.common.investment.model.equity.financial.BaseModel;
+import org.springframework.data.mongodb.core.mapping.Document;
+
 import com.am.common.investment.model.equity.metrics.CostMetrics;
 import com.am.common.investment.model.equity.metrics.EpsMetrics;
 import com.am.common.investment.model.equity.metrics.GrowthMetrics;
 import com.am.common.investment.model.equity.metrics.ProfitMetrics;
 import com.am.common.investment.model.equity.metrics.TaxMetrics;
+import com.am.common.investment.persistence.document.BaseDocument;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import lombok.AllArgsConstructor;
@@ -18,11 +21,15 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class ProfitAndLoss extends BaseModel{
+@JsonIgnoreProperties(ignoreUnknown = true)
+@Document(collection = "financial_result")
+public class FinancialResultDocument extends BaseDocument {
+   private String yearEnd;
     
     // Revenue Metrics
     private Double totalRevenue;
     private Double operatingRevenue;
+    private Double otherIncome;
     
     // Cost Metrics
     private CostMetrics costMetrics;
@@ -30,12 +37,20 @@ public class ProfitAndLoss extends BaseModel{
     // Profit Metrics
     private ProfitMetrics profitMetrics;
     
-    // Growth Metrics
-    private GrowthMetrics growthMetrics;
+    // Tax Metrics
+    private TaxMetrics taxMetrics;
     
     // EPS Metrics
     private EpsMetrics epsMetrics;
     
-    // Tax Metrics
-    private TaxMetrics taxMetrics;
+    // Growth Metrics
+    private GrowthMetrics growthMetrics;
+    
+    // Additional Metrics
+    private Double profitFromAssociates;
+    private Double patMargin;
+    private Double patGrowth;
+    private Double patMarginGrowth;
+    private Double adjEpsInRsBasic;
+    private Double adjEpsInRsDiluted; 
 }

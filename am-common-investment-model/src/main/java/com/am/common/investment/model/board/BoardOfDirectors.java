@@ -2,22 +2,20 @@ package com.am.common.investment.model.board;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.am.common.investment.model.equity.financial.BaseModel;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-public class BoardOfDirectors {
-    private String companyId;
-    private String companyName;
+@SuperBuilder
+public class BoardOfDirectors extends BaseModel{
     private List<Director> directors;
-    private LocalDate lastUpdated;
     
     /**
      * Get all executive directors

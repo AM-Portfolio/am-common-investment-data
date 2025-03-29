@@ -15,12 +15,12 @@ import lombok.experimental.SuperBuilder;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class CostMetrics {
-    private double totalExpenditure;
-    private double rawMaterialCost;
-    private double manufacturingCost;
-    private double employeeCost;
-    private double interest;
-    private double otherCost;
-    private double operatingExpenses;
-    private double depreciationAndAmortization;
+    private Double totalExpenditure;
+    private Double rawMaterialCost;
+    private Double manufacturingCost;
+    private Double employeeCost;
+    private Double interest;
+    private Double otherCost;
+    private Double operatingExpenses;
+    private Double depreciationAndAmortization;
 }

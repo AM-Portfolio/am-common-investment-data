@@ -15,12 +15,12 @@ import lombok.experimental.SuperBuilder;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class GrowthMetrics {
-    private double revenueGrowthPer;
-    private double netProfitGrowth;
-    private double netProfitMarginGrowth;
-    private double netSalesGrowth;
-    private double ebitdaGrowth;
-    private double ebitGrowth;
-    private double patGrowth;
-    private double patMarginGrowth;
+    private Double revenueGrowthPer;
+    private Double netProfitGrowth;
+    private Double netProfitMarginGrowth;
+    private Double netSalesGrowth;
+    private Double ebitdaGrowth;
+    private Double ebitGrowth;
+    private Double patGrowth;
+    private Double patMarginGrowth;
 }

@@ -15,17 +15,17 @@ import lombok.experimental.SuperBuilder;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class CashFlowOperatingMetrics {
-    private double cashFromOperatingActivities;
-    private double profitFromOperations;
-    private double interestReceived;
-    private double dividendReceived;
-    private double directTaxes;
-    private double exceptionalCfItems;
+    private Double cashFromOperatingActivities;
+    private Double profitFromOperations;
+    private Double interestReceived;
+    private Double dividendReceived;
+    private Double directTaxes;
+    private Double exceptionalCfItems;
     
     // Working Capital Changes
-    private double receivables;
-    private double inventory;
-    private double payables;
-    private double workingCapitalChanges;
-    private double otherWcItems;
+    private Double receivables;
+    private Double inventory;
+    private Double payables;
+    private Double workingCapitalChanges;
+    private Double otherWcItems;
 }

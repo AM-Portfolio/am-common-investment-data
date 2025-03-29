@@ -2,11 +2,9 @@ package com.am.common.investment.persistence.document.stock.financial.cashflow;
 
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import com.am.common.investment.model.equity.metrics.CostMetrics;
-import com.am.common.investment.model.equity.metrics.EpsMetrics;
-import com.am.common.investment.model.equity.metrics.GrowthMetrics;
-import com.am.common.investment.model.equity.metrics.ProfitMetrics;
-import com.am.common.investment.model.equity.metrics.TaxMetrics;
+import com.am.common.investment.model.equity.metrics.CashFlowFinancingMetrics;
+import com.am.common.investment.model.equity.metrics.CashFlowInvestingMetrics;
+import com.am.common.investment.model.equity.metrics.CashFlowOperatingMetrics;
 import com.am.common.investment.persistence.document.BaseDocument;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -22,19 +20,19 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-@Document(collection = "profit_and_loss")
+@Document(collection = "cash_flow")
 public class CashFlowDocument extends BaseDocument{
     
-    private double totalRevenue;
-    private double operatingRevenue;
+    // Operating Activities
+    private CashFlowOperatingMetrics operatingMetrics;
     
-    private CostMetrics costMetrics;
+    // Investing Activities
+    private CashFlowInvestingMetrics investingMetrics;
     
-    private ProfitMetrics profitMetrics;
+    // Financing Activities
+    private CashFlowFinancingMetrics financingMetrics;
     
-    private GrowthMetrics growthMetrics;
-    
-    private EpsMetrics epsMetrics;
-    
-    private TaxMetrics taxMetrics;
+    // Summary Metrics
+    private Double netCashFlow;
+    private Double freeCashFlow;
 }

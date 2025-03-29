@@ -15,10 +15,10 @@ import lombok.experimental.SuperBuilder;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class DividendMetrics {
-    private double dividendYield;
-    private double dividendPerShare;
-    private double adjDividendPerShare;
-    private double dividendPayoutRatio;
-    private double freeCashFlowPerShare;
-    private double freeCashFlowYield;
+    private Double dividendYield;
+    private Double dividendPerShare;
+    private Double adjDividendPerShare;
+    private Double dividendPayoutRatio;
+    private Double freeCashFlowPerShare;
+    private Double freeCashFlowYield;
 }

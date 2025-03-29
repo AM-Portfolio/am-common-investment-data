@@ -15,9 +15,9 @@ import lombok.experimental.SuperBuilder;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ProfitMetrics {
-    private double netProfit;
-    private double operationProfit;
-    private double profitBeforeTax;
-    private double profitAfterTax;
-    private double minorityShare;
+    private Double netProfit;
+    private Double operationProfit;
+    private Double profitBeforeTax;
+    private Double profitAfterTax;
+    private Double minorityShare;
 }

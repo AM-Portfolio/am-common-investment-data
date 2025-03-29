@@ -15,20 +15,20 @@ import lombok.experimental.SuperBuilder;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class AssetsMetrics {
-    private double inventory;
-    private double fixedAssets;
-    private double capitalWorkInProgress;
-    private double intangibleAssets;
-    private double intangibleAssetsUnderDev;
-    private double netBlock;
+    private Double inventory;
+    private Double fixedAssets;
+    private Double capitalWorkInProgress;
+    private Double intangibleAssets;
+    private Double intangibleAssetsUnderDev;
+    private Double netBlock;
     
     // Current Assets
-    private double currentAssets;
-    private double accountsReceivables;
-    private double shortTermInvestments;
-    private double cashAndBankBalances;
+    private Double currentAssets;
+    private Double accountsReceivables;
+    private Double shortTermInvestments;
+    private Double cashAndBankBalances;
     
     // Non-Current Assets
-    private double nonCurrentAssets;
-    private double longTermInvestments;
+    private Double nonCurrentAssets;
+    private Double longTermInvestments;
 }

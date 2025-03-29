@@ -19,9 +19,9 @@ import lombok.experimental.SuperBuilder;
 public class BalanceSheet extends BaseModel{
     
     // Total Metrics
-    private double assets;
-    private double liabilitiesEquity;
-    private double totalDebits;
+    private Double assets;
+    private Double liabilitiesEquity;
+    private Double totalDebits;
     
     // Assets Metrics
     private AssetsMetrics assetsMetrics;

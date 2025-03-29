@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.index.Indexed;
 
 import com.am.common.investment.model.stockindice.AuditData;
 
@@ -24,12 +24,13 @@ import java.util.UUID;
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-@Document
 public class BaseDocument {
     
     @Id
     private UUID id;
+    @Indexed
     private String symbol;
+
     private String docVersion;
     private AuditData audit;
     private String source;

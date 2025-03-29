@@ -10,7 +10,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
-import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.List;
@@ -26,12 +25,5 @@ import java.util.List;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Document(collection = "board_of_directors")
 public class BoardOfDirectorsDocument extends BaseDocument {
-    
-    @Indexed
-    private String companyId;
-    
-    private String companyName;
-    
     private List<Director> directors;
-
 }

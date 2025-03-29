@@ -28,15 +28,15 @@ public class FactSheetDividend extends BaseModel{
     private DividendMetrics dividendMetrics;
     
     // Additional Metrics
-    private double assetTurnoverRatio;
-    private double workingCapitalDays;
-    private double inventoryTurnoverRatio;
-    private double adjEarningsPerShare;
-    private double enterpriseValue;
-    private double pegRatio;
-    private double priceSalesRatio;
-    private double adjDividendPerShare;
-    private double freeCashFlowPerShare;
-    private double cashConversionCycle;
-    private double freeCashFlowYield;
+    private Double assetTurnoverRatio;
+    private Double workingCapitalDays;
+    private Double inventoryTurnoverRatio;
+    private Double adjEarningsPerShare;
+    private Double enterpriseValue;
+    private Double pegRatio;
+    private Double priceSalesRatio;
+    private Double adjDividendPerShare;
+    private Double freeCashFlowPerShare;
+    private Double cashConversionCycle;
+    private Double freeCashFlowYield;
 }

@@ -16,46 +16,46 @@ import lombok.experimental.SuperBuilder;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class FinancialRatios {
     // Market Ratios
-    private double pe;
-    private double evEbitda;
-    private double priceBookValue;
-    private double priceToCashflow;
-    private double priceToFreeCashflow;
-    private double priceSalesRatio;
+    private Double pe;
+    private Double evEbitda;
+    private Double priceBookValue;
+    private Double priceToCashflow;
+    private Double priceToFreeCashflow;
+    private Double priceSalesRatio;
     
     // Liquidity Ratios
-    private double currentRatio;
-    private double quickRatio;
+    private Double currentRatio;
+    private Double quickRatio;
     
     // Efficiency Ratios
-    private double receivableDays;
-    private double inventoryDays;
-    private double payableDays;
-    private double workingCapitalDays;
-    private double inventoryTurnoverRatio;
-    private double assetTurnoverRatio;
-    private double cashConversionCycle;
+    private Double receivableDays;
+    private Double inventoryDays;
+    private Double payableDays;
+    private Double workingCapitalDays;
+    private Double inventoryTurnoverRatio;
+    private Double assetTurnoverRatio;
+    private Double cashConversionCycle;
     
     // Profitability Ratios
-    private double pbditMargin;
-    private double pbtMargin;
-    private double ebitMargin;
-    private double netProfitMargin;
-    private double contributionProfitMargin;
-    private double pbitMargin;
+    private Double pbditMargin;
+    private Double pbtMargin;
+    private Double ebitMargin;
+    private Double netProfitMargin;
+    private Double contributionProfitMargin;
+    private Double pbitMargin;
     
     // Return Ratios
-    private double returnOnEquity;
-    private double returnOnAssets;
-    private double returnOnCapEmployed;
+    private Double returnOnEquity;
+    private Double returnOnAssets;
+    private Double returnOnCapEmployed;
     
     // Leverage Ratios
-    private double interestCoverageRatio;
-    private double debtToEquityRatio;
-    private double totalDebtToMarketCap;
-    private double fixedCapitalToSalesRatio;
+    private Double interestCoverageRatio;
+    private Double debtToEquityRatio;
+    private Double totalDebtToMarketCap;
+    private Double fixedCapitalToSalesRatio;
     
     // Growth Ratios
-    private double marketCapToSales;
-    private double pegRatio;
+    private Double marketCapToSales;
+    private Double pegRatio;
 }

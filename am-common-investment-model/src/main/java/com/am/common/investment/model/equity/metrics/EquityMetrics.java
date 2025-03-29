@@ -15,9 +15,9 @@ import lombok.experimental.SuperBuilder;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class EquityMetrics {
-    private double shareCapital;
-    private double preferenceCapital;
-    private double equityCapital;
-    private double shareholdersFunds;
-    private double reserves;
+    private Double shareCapital;
+    private Double preferenceCapital;
+    private Double equityCapital;
+    private Double shareholdersFunds;
+    private Double reserves;
 }

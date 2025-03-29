@@ -25,8 +25,8 @@ import lombok.experimental.SuperBuilder;
 @Document(collection = "profit_and_loss")
 public class ProfitAndLossDocument extends BaseDocument{
     
-    private double totalRevenue;
-    private double operatingRevenue;
+    private Double totalRevenue;
+    private Double operatingRevenue;
     
     private CostMetrics costMetrics;
     

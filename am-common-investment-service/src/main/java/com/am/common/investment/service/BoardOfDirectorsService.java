@@ -24,11 +24,4 @@ public interface BoardOfDirectorsService {
      * @return The saved board of directors
      */
     BoardOfDirectors saveBoardOfDirectors(BoardOfDirectors boardOfDirectors);
-    
-    /**
-     * Delete board of directors by company ID
-     * 
-     * @param companyId The company ID or symbol
-     */
-    void deleteBoardOfDirectorsByCompanyId(String companyId);
 }

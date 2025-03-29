@@ -15,6 +15,6 @@ import lombok.experimental.SuperBuilder;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class EpsMetrics {
-    private double basicEpsRs;
-    private double dilutedEpsRs;
+    private Double basicEpsRs;
+    private Double dilutedEpsRs;
 }

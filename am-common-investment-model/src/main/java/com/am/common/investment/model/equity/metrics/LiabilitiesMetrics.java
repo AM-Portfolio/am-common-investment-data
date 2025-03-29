@@ -15,11 +15,11 @@ import lombok.experimental.SuperBuilder;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class LiabilitiesMetrics {
-    private double provisions;
-    private double shortTermBorrowings;
-    private double currentLiabilities;
-    private double accountPayables;
-    private double otherCurrentLiabilities;
-    private double nonCurrentLiabilities;
-    private double totalDebits;
+    private Double provisions;
+    private Double shortTermBorrowings;
+    private Double currentLiabilities;
+    private Double accountPayables;
+    private Double otherCurrentLiabilities;
+    private Double nonCurrentLiabilities;
+    private Double totalDebits;
 }

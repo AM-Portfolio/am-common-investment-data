@@ -20,13 +20,13 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-@Document(collection = "profit_and_loss")
+@Document(collection = "balance_sheet")
 public class BalanceSheetDocument extends BaseDocument{
     
     // Total Metrics
-    private double assets;
-    private double liabilitiesEquity;
-    private double totalDebits;
+    private Double assets;
+    private Double liabilitiesEquity;
+    private Double totalDebits;
     
     // Assets Metrics
     private AssetsMetrics assetsMetrics;

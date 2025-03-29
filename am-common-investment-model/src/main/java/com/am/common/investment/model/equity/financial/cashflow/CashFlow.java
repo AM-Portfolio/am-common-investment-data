@@ -28,6 +28,6 @@ public class CashFlow extends BaseModel{
     private CashFlowFinancingMetrics financingMetrics;
     
     // Summary Metrics
-    private double netCashFlow;
-    private double freeCashFlow;
+    private Double netCashFlow;
+    private Double freeCashFlow;
 }

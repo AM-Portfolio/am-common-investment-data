@@ -15,6 +15,6 @@ import lombok.experimental.SuperBuilder;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class TaxMetrics {
-    private double tax;
-    private double taxPer;
+    private Double tax;
+    private Double taxPer;
 }

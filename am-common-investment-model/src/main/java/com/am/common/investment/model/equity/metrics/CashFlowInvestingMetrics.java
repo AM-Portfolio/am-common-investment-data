@@ -15,20 +15,20 @@ import lombok.experimental.SuperBuilder;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class CashFlowInvestingMetrics {
-    private double cashFromInvestingActivities;
+    private Double cashFromInvestingActivities;
     
     // Fixed Assets
-    private double fixedAssetsPurchased;
-    private double fixedAssetsSold;
+    private Double fixedAssetsPurchased;
+    private Double fixedAssetsSold;
     
     // Investments
-    private double investmentsPurchased;
-    private double investmentsSold;
-    private double otherInvestingItems;
+    private Double investmentsPurchased;
+    private Double investmentsSold;
+    private Double otherInvestingItems;
     
     // Other Investments
-    private double acquisitionOfCompanies;
-    private double interCorporateDeposits;
-    private double investmentInGroupCos;
-    private double investmentInSubsidiaries;
+    private Double acquisitionOfCompanies;
+    private Double interCorporateDeposits;
+    private Double investmentInGroupCos;
+    private Double investmentInSubsidiaries;
 }
