@@ -6,6 +6,7 @@ import com.am.common.investment.persistence.document.companyprofile.BoardOfDirec
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 /**
  * Mapper for converting between BoardOfDirectors model and BoardOfDirectorsDocument
@@ -37,6 +38,7 @@ public class BoardOfDirectorsMapper {
         }
         
         return BoardOfDirectorsDocument.builder()
+                .id(UUID.randomUUID().toString())
                 .companyId(model.getCompanyId())
                 .companyName(model.getCompanyName())
                 .directors(model.getDirectors())

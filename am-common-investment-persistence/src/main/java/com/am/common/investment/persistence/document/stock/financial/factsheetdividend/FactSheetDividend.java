@@ -1,0 +1,47 @@
+package com.am.common.investment.persistence.document.stock.financial.factsheetdividend;
+
+import org.springframework.data.mongodb.core.mapping.Document;
+
+import com.am.common.investment.model.equity.metrics.DividendMetrics;
+import com.am.common.investment.model.equity.metrics.FinancialRatios;
+import com.am.common.investment.model.equity.metrics.GrowthMetrics;
+import com.am.common.investment.persistence.document.BaseDocument;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
+
+@Data
+@SuperBuilder
+@NoArgsConstructor
+@AllArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonIgnoreProperties(ignoreUnknown = true)
+@Document(collection = "profit_and_loss")
+public class FactSheetDividend extends BaseDocument{
+    
+   // Growth Metrics
+    private GrowthMetrics growthMetrics;
+    
+    // Financial Ratios
+    private FinancialRatios financialRatios;
+    
+    // Dividend Metrics
+    private DividendMetrics dividendMetrics;
+    
+    // Additional Metrics
+    private double assetTurnoverRatio;
+    private double workingCapitalDays;
+    private double inventoryTurnoverRatio;
+    private double adjEarningsPerShare;
+    private double enterpriseValue;
+    private double pegRatio;
+    private double priceSalesRatio;
+    private double adjDividendPerShare;
+    private double freeCashFlowPerShare;
+    private double cashConversionCycle;
+    private double freeCashFlowYield;
+}
