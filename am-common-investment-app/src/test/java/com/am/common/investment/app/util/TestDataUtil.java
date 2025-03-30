@@ -3,9 +3,22 @@ package com.am.common.investment.app.util;
 import com.am.common.investment.model.equity.EquityPrice;
 import com.am.common.investment.persistence.influx.measurement.EquityPriceMeasurement;
 import java.time.Instant;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+
+import com.am.common.investment.model.board.BoardOfDirectors;
 
 public class TestDataUtil {
-    
+
+    public static BoardOfDirectors readBoardOfDirectorsFromResource(String resourcePath) throws IOException {
+        // Read the JSON content from the resource file
+        String json = new String(Files.readAllBytes(Paths.get("src/test/resources/" + resourcePath)));
+        
+        // Use JsonUtils to parse the JSON into a BoardOfDirectors object
+        return JsonUtils.fromJson(json, BoardOfDirectors.class);
+    }
+
     public static EquityPrice createEquityPrice(String symbol, String isin, Double open, Double high, Double low, 
             Double close, Long volume, String exchange, String currency, Instant time) {
         return EquityPrice.builder()

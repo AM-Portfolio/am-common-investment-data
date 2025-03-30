@@ -10,6 +10,8 @@ import org.springframework.context.annotation.ComponentScan;
     "com.am.common.investment.service",
     "com.am.common.investment.persistence",
     "com.am.common.investment.persistence.document",
+    "com.am.common.investment.persistence.repository",
+    "com.am.common.investment.model.events.mapper",
     "com.am.common.investment.app",
     "com.am.common.investment.model",
     "com.am.common.investment.app.service"
