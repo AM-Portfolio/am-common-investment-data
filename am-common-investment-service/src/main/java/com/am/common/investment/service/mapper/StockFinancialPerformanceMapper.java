@@ -12,30 +12,286 @@ import com.am.common.investment.persistence.document.stock.financial.cashflow.Ca
 import com.am.common.investment.persistence.document.stock.financial.factsheetdividend.FactSheetDividendDocument;
 import com.am.common.investment.persistence.document.stock.financial.profitandloss.ProfitAndLossDocument;
 import com.am.common.investment.persistence.document.stock.financial.result.FinancialResultDocument;
-import org.mapstruct.Mapper;
-import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Component;
 
-@Mapper(componentModel = "spring", uses = BaseMapper.class)
+import java.util.ArrayList;
+
 @Component
-public interface StockFinancialPerformanceMapper {
-    StockFinancialPerformanceMapper INSTANCE = Mappers.getMapper(StockFinancialPerformanceMapper.class);
+public class StockFinancialPerformanceMapper {
 
-    BoardOfDirectors toModel(BoardOfDirectorsDocument document);
-    BoardOfDirectorsDocument toDocument(BoardOfDirectors model);
+    // Board of Directors mapping
+    public BoardOfDirectors toModel(BoardOfDirectorsDocument document) {
+        if (document == null) {
+            return null;
+        }
+        
+        BoardOfDirectors model = new BoardOfDirectors();
+        model.setId(document.getId());
+        model.setSymbol(document.getSymbol());
+        model.setDocVersion(document.getDocVersion());
+        model.setAudit(document.getAudit());
+        model.setSource(document.getSource());
+        
+        if (document.getDirectors() != null) {
+            model.setDirectors(document.getDirectors());
+        } else {
+            model.setDirectors(new ArrayList<>());
+        }
+        
+        return model;
+    }
+    
+    public BoardOfDirectorsDocument toDocument(BoardOfDirectors model) {
+        if (model == null) {
+            return null;
+        }
+        
+        BoardOfDirectorsDocument document = new BoardOfDirectorsDocument();
+        document.setId(model.getId());
+        document.setSymbol(model.getSymbol());
+        document.setDocVersion(model.getDocVersion());
+        document.setAudit(model.getAudit());
+        document.setSource(model.getSource());
+        
+        if (model.getDirectors() != null) {
+            document.setDirectors(model.getDirectors());
+        } else {
+            document.setDirectors(new ArrayList<>());
+        }
+        
+        return document;
+    }
 
-    CashFlow toModel(CashFlowDocument document);
-    CashFlowDocument toDocument(CashFlow model);
+    // Cash Flow mapping
+    public CashFlow toModel(CashFlowDocument document) {
+        if (document == null) {
+            return null;
+        }
+        
+        CashFlow model = new CashFlow();
+        model.setId(document.getId());
+        model.setSymbol(document.getSymbol());
+        model.setDocVersion(document.getDocVersion());
+        model.setAudit(document.getAudit());
+        model.setSource(document.getSource());
+        model.setOperatingMetrics(document.getOperatingMetrics());
+        model.setInvestingMetrics(document.getInvestingMetrics());
+        model.setFinancingMetrics(document.getFinancingMetrics());
+        model.setNetCashFlow(document.getNetCashFlow());
+        model.setFreeCashFlow(document.getFreeCashFlow());
+        
+        return model;
+    }
+    
+    public CashFlowDocument toDocument(CashFlow model) {
+        if (model == null) {
+            return null;
+        }
+        
+        CashFlowDocument document = new CashFlowDocument();
+        document.setId(model.getId());
+        document.setSymbol(model.getSymbol());
+        document.setDocVersion(model.getDocVersion());
+        document.setAudit(model.getAudit());
+        document.setSource(model.getSource());
+        document.setOperatingMetrics(model.getOperatingMetrics());
+        document.setInvestingMetrics(model.getInvestingMetrics());
+        document.setFinancingMetrics(model.getFinancingMetrics());
+        document.setNetCashFlow(model.getNetCashFlow());
+        document.setFreeCashFlow(model.getFreeCashFlow());
+        
+        return document;
+    }
 
-    BalanceSheet toModel(BalanceSheetDocument document);
-    BalanceSheetDocument toDocument(BalanceSheet model);
+    // Balance Sheet mapping
+    public BalanceSheet toModel(BalanceSheetDocument document) {
+        if (document == null) {
+            return null;
+        }
+        
+        BalanceSheet model = new BalanceSheet();
+        model.setId(document.getId());
+        model.setSymbol(document.getSymbol());
+        model.setDocVersion(document.getDocVersion());
+        model.setAudit(document.getAudit());
+        model.setSource(document.getSource());
+        model.setAssets(document.getAssets());
+        model.setLiabilitiesEquity(document.getLiabilitiesEquity());
+        model.setTotalDebits(document.getTotalDebits());
+        model.setAssetsMetrics(document.getAssetsMetrics());
+        model.setLiabilitiesMetrics(document.getLiabilitiesMetrics());
+        model.setEquityMetrics(document.getEquityMetrics());
+        
+        return model;
+    }
+    
+    public BalanceSheetDocument toDocument(BalanceSheet model) {
+        if (model == null) {
+            return null;
+        }
+        
+        BalanceSheetDocument document = new BalanceSheetDocument();
+        document.setId(model.getId());
+        document.setSymbol(model.getSymbol());
+        document.setDocVersion(model.getDocVersion());
+        document.setAudit(model.getAudit());
+        document.setSource(model.getSource());
+        document.setAssets(model.getAssets());
+        document.setLiabilitiesEquity(model.getLiabilitiesEquity());
+        document.setTotalDebits(model.getTotalDebits());
+        document.setAssetsMetrics(model.getAssetsMetrics());
+        document.setLiabilitiesMetrics(model.getLiabilitiesMetrics());
+        document.setEquityMetrics(model.getEquityMetrics());
+        
+        return document;
+    }
 
-    ProfitAndLoss toModel(ProfitAndLossDocument document);
-    ProfitAndLossDocument toDocument(ProfitAndLoss model);
+    // Profit and Loss mapping
+    public ProfitAndLoss toModel(ProfitAndLossDocument document) {
+        if (document == null) {
+            return null;
+        }
+        
+        ProfitAndLoss model = new ProfitAndLoss();
+        model.setId(document.getId());
+        model.setSymbol(document.getSymbol());
+        model.setDocVersion(document.getDocVersion());
+        model.setAudit(document.getAudit());
+        model.setSource(document.getSource());
+        model.setTotalRevenue(document.getTotalRevenue());
+        model.setOperatingRevenue(document.getOperatingRevenue());
+        model.setCostMetrics(document.getCostMetrics());
+        model.setProfitMetrics(document.getProfitMetrics());
+        model.setGrowthMetrics(document.getGrowthMetrics());
+        model.setEpsMetrics(document.getEpsMetrics());
+        model.setTaxMetrics(document.getTaxMetrics());
+        
+        return model;
+    }
+    
+    public ProfitAndLossDocument toDocument(ProfitAndLoss model) {
+        if (model == null) {
+            return null;
+        }
+        
+        ProfitAndLossDocument document = new ProfitAndLossDocument();
+        document.setId(model.getId());
+        document.setSymbol(model.getSymbol());
+        document.setDocVersion(model.getDocVersion());
+        document.setAudit(model.getAudit());
+        document.setSource(model.getSource());
+        document.setTotalRevenue(model.getTotalRevenue());
+        document.setOperatingRevenue(model.getOperatingRevenue());
+        document.setCostMetrics(model.getCostMetrics());
+        document.setProfitMetrics(model.getProfitMetrics());
+        document.setGrowthMetrics(model.getGrowthMetrics());
+        document.setEpsMetrics(model.getEpsMetrics());
+        document.setTaxMetrics(model.getTaxMetrics());
+        
+        return document;
+    }
 
-    FactSheetDividend toModel(FactSheetDividendDocument document);
-    FactSheetDividendDocument toDocument(FactSheetDividend model);
+    // FactSheet Dividend mapping
+    public FactSheetDividend toModel(FactSheetDividendDocument document) {
+        if (document == null) {
+            return null;
+        }
+        
+        FactSheetDividend model = new FactSheetDividend();
+        model.setId(document.getId());
+        model.setSymbol(document.getSymbol());
+        model.setDocVersion(document.getDocVersion());
+        model.setAudit(document.getAudit());
+        model.setSource(document.getSource());
+        model.setGrowthMetrics(document.getGrowthMetrics());
+        model.setFinancialRatios(document.getFinancialRatios());
+        model.setDividendMetrics(document.getDividendMetrics());
+        model.setAssetTurnoverRatio(document.getAssetTurnoverRatio());
+        model.setWorkingCapitalDays(document.getWorkingCapitalDays());
+        model.setInventoryTurnoverRatio(document.getInventoryTurnoverRatio());
+        model.setAdjEarningsPerShare(document.getAdjEarningsPerShare());
+        model.setEnterpriseValue(document.getEnterpriseValue());
+        model.setPegRatio(document.getPegRatio());
+        model.setPriceSalesRatio(document.getPriceSalesRatio());
+        model.setAdjDividendPerShare(document.getAdjDividendPerShare());
+        model.setFreeCashFlowPerShare(document.getFreeCashFlowPerShare());
+        model.setCashConversionCycle(document.getCashConversionCycle());
+        model.setFreeCashFlowYield(document.getFreeCashFlowYield());
+        
+        return model;
+    }
+    
+    public FactSheetDividendDocument toDocument(FactSheetDividend model) {
+        if (model == null) {
+            return null;
+        }
+        
+        FactSheetDividendDocument document = new FactSheetDividendDocument();
+        document.setId(model.getId());
+        document.setSymbol(model.getSymbol());
+        document.setDocVersion(model.getDocVersion());
+        document.setAudit(model.getAudit());
+        document.setSource(model.getSource());
+        document.setGrowthMetrics(model.getGrowthMetrics());
+        document.setFinancialRatios(model.getFinancialRatios());
+        document.setDividendMetrics(model.getDividendMetrics());
+        document.setAssetTurnoverRatio(model.getAssetTurnoverRatio());
+        document.setWorkingCapitalDays(model.getWorkingCapitalDays());
+        document.setInventoryTurnoverRatio(model.getInventoryTurnoverRatio());
+        document.setAdjEarningsPerShare(model.getAdjEarningsPerShare());
+        document.setEnterpriseValue(model.getEnterpriseValue());
+        document.setPegRatio(model.getPegRatio());
+        document.setPriceSalesRatio(model.getPriceSalesRatio());
+        document.setAdjDividendPerShare(model.getAdjDividendPerShare());
+        document.setFreeCashFlowPerShare(model.getFreeCashFlowPerShare());
+        document.setCashConversionCycle(model.getCashConversionCycle());
+        document.setFreeCashFlowYield(model.getFreeCashFlowYield());
+        
+        return document;
+    }
 
-    FinancialResult toModel(FinancialResultDocument document);
-    FinancialResultDocument toDocument(FinancialResult model);
+    // Financial Result mapping
+    public FinancialResult toModel(FinancialResultDocument document) {
+        if (document == null) {
+            return null;
+        }
+        
+        FinancialResult model = new FinancialResult();
+        model.setId(document.getId());
+        model.setSymbol(document.getSymbol());
+        model.setDocVersion(document.getDocVersion());
+        model.setAudit(document.getAudit());
+        model.setSource(document.getSource());
+        model.setTotalRevenue(document.getTotalRevenue());
+        model.setOperatingRevenue(document.getOperatingRevenue());
+        model.setCostMetrics(document.getCostMetrics());
+        model.setProfitMetrics(document.getProfitMetrics());
+        model.setGrowthMetrics(document.getGrowthMetrics());
+        model.setEpsMetrics(document.getEpsMetrics());
+        model.setTaxMetrics(document.getTaxMetrics());
+        
+        return model;
+    }
+    
+    public FinancialResultDocument toDocument(FinancialResult model) {
+        if (model == null) {
+            return null;
+        }
+        
+        FinancialResultDocument document = new FinancialResultDocument();
+        document.setId(model.getId());
+        document.setSymbol(model.getSymbol());
+        document.setDocVersion(model.getDocVersion());
+        document.setAudit(model.getAudit());
+        document.setSource(model.getSource());
+        document.setTotalRevenue(model.getTotalRevenue());
+        document.setOperatingRevenue(model.getOperatingRevenue());
+        document.setCostMetrics(model.getCostMetrics());
+        document.setProfitMetrics(model.getProfitMetrics());
+        document.setGrowthMetrics(model.getGrowthMetrics());
+        document.setEpsMetrics(model.getEpsMetrics());
+        document.setTaxMetrics(model.getTaxMetrics());
+        
+        return document;
+    }
 }
