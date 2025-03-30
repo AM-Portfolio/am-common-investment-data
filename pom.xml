@@ -14,7 +14,7 @@
         <module>am-common-investment-model</module>
         <module>am-common-investment-persistence</module>
         <module>am-common-investment-service</module>
-        <!-- <module>am-common-investment-app</module> -->
+        <module>am-common-investment-app</module>
     </modules>
 
     <properties>

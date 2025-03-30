@@ -1,8 +1,10 @@
 package com.am.common.investment.app.util;
 
 import com.am.common.investment.model.equity.EquityPrice;
+import com.am.common.investment.model.stockindice.AuditData;
 import com.am.common.investment.persistence.influx.measurement.EquityPriceMeasurement;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -14,9 +16,22 @@ public class TestDataUtil {
     public static BoardOfDirectors readBoardOfDirectorsFromResource(String resourcePath) throws IOException {
         // Read the JSON content from the resource file
         String json = new String(Files.readAllBytes(Paths.get("src/test/resources/" + resourcePath)));
-        
+        AuditData audit = createAudit();
         // Use JsonUtils to parse the JSON into a BoardOfDirectors object
-        return JsonUtils.fromJson(json, BoardOfDirectors.class);
+        BoardOfDirectors boardOfDirectors = JsonUtils.fromJson(json, BoardOfDirectors.class);
+        boardOfDirectors.setAudit(audit);
+        return boardOfDirectors;
+    }
+
+    private static AuditData createAudit() {
+        LocalDateTime now = LocalDateTime.now();
+        AuditData audit = AuditData.builder()
+        .createdAt(now)
+        .updatedAt(now)
+        .createdBy("test")
+        .updatedBy("test")
+        .build();
+        return audit;
     }
 
     public static EquityPrice createEquityPrice(String symbol, String isin, Double open, Double high, Double low, 

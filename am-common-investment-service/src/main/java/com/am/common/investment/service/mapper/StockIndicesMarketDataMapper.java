@@ -4,13 +4,18 @@ import com.am.common.investment.model.stockindice.StockIndicesMarketData;
 import com.am.common.investment.persistence.document.StockIndicesMarketDataDocument;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
+import org.mapstruct.InjectionStrategy;
 
 import java.util.List;
 
 /**
  * Mapper for converting between StockIndicesMarketData model and StockIndicesMarketDataDocument
  */
-@Mapper(componentModel = "spring")
+@Mapper(
+    componentModel = "spring",
+    uses = {},
+    injectionStrategy = InjectionStrategy.CONSTRUCTOR
+)
 public interface StockIndicesMarketDataMapper {
 
     StockIndicesMarketDataMapper INSTANCE = Mappers.getMapper(StockIndicesMarketDataMapper.class);

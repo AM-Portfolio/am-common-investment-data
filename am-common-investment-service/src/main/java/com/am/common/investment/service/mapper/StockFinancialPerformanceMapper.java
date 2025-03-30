@@ -1,11 +1,14 @@
 package com.am.common.investment.service.mapper;
 
 import com.am.common.investment.model.board.BoardOfDirectors;
+import com.am.common.investment.model.equity.financial.BaseModel;
+import com.am.common.investment.model.equity.financial.BaseModel;
 import com.am.common.investment.model.equity.financial.balancesheet.BalanceSheet;
 import com.am.common.investment.model.equity.financial.cashflow.CashFlow;
 import com.am.common.investment.model.equity.financial.factsheetdividend.FactSheetDividend;
 import com.am.common.investment.model.equity.financial.profitandloss.ProfitAndLoss;
 import com.am.common.investment.model.equity.financial.resultstatement.FinancialResult;
+import com.am.common.investment.persistence.document.BaseDocument;
 import com.am.common.investment.persistence.document.companyprofile.BoardOfDirectorsDocument;
 import com.am.common.investment.persistence.document.stock.financial.balancesheet.BalanceSheetDocument;
 import com.am.common.investment.persistence.document.stock.financial.cashflow.CashFlowDocument;
@@ -39,6 +42,34 @@ public class StockFinancialPerformanceMapper {
         }
         
         return model;
+    }
+
+    public BaseModel toModel(BaseDocument document) {
+        if (document == null) {
+            return null;
+        }
+        
+        BaseModel model = new BaseModel();
+        model.setId(document.getId());
+        model.setSymbol(document.getSymbol());
+        model.setDocVersion(document.getDocVersion());
+        model.setAudit(document.getAudit());
+        model.setSource(document.getSource());
+        return model;
+    }
+
+    public BaseDocument toDocument(BaseModel model) {
+        if (model == null) {
+            return null;
+        }
+        
+        BaseDocument document = new BaseDocument();
+        document.setId(model.getId());
+        document.setSymbol(model.getSymbol());
+        document.setDocVersion(model.getDocVersion());
+        document.setAudit(model.getAudit());
+        document.setSource(model.getSource());
+        return document;
     }
     
     public BoardOfDirectorsDocument toDocument(BoardOfDirectors model) {

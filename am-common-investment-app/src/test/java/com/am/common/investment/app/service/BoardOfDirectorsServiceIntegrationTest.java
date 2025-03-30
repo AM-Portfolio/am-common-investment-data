@@ -17,6 +17,7 @@ import com.am.common.investment.app.config.TestContainersConfig;
 import com.am.common.investment.app.util.TestDataUtil;
 import com.am.common.investment.model.board.BoardOfDirectors;
 import com.am.common.investment.model.board.Director;
+import com.am.common.investment.model.stockindice.AuditData;
 import com.am.common.investment.service.StockFinancialPerformanceService;
 
 /**
@@ -44,6 +45,7 @@ public class BoardOfDirectorsServiceIntegrationTest {
     void shouldSaveAndRetrieveBoardOfDirectors() {
         // Given
         String symbol = boardOfDirectors.getSymbol();
+        boardOfDirectors.setSymbol(symbol);
         
         // When
         BoardOfDirectors savedBoardOfDirectors = stockFinancialPerformanceService.saveBoardOfDirectors(boardOfDirectors);
@@ -64,5 +66,12 @@ public class BoardOfDirectorsServiceIntegrationTest {
         assertThat(retrievedDirector.getCompanyId()).isEqualTo(originalDirector.getCompanyId());
         assertThat(retrievedDirector.getAppointmentDate()).isEqualTo(originalDirector.getAppointmentDate());
         assertThat(retrievedDirector.getLastReelectionDate()).isEqualTo(originalDirector.getLastReelectionDate());
+
+        // Verify all base model properties
+        AuditData originalAudit = savedBoardOfDirectors.getAudit();
+        AuditData retrievedAudit = retrievedBoardOfDirectors.get().getAudit();
+        
+        assertThat(retrievedAudit.getCreatedBy()).isEqualTo(originalAudit.getCreatedBy());
+        assertThat(retrievedAudit.getUpdatedBy()).isEqualTo(originalAudit.getUpdatedBy());
     }
 }

@@ -24,7 +24,7 @@ import com.am.common.investment.persistence.repository.stock.financial.FactSheet
 import com.am.common.investment.persistence.repository.stock.financial.FinancialResultRepository;
 import com.am.common.investment.persistence.repository.stock.financial.ProfitAndLossRepository;
 import com.am.common.investment.service.StockFinancialPerformanceService;
-import com.am.common.investment.service.mapper.StockFinancialPerformanceMapper;
+import com.am.common.investment.service.mapper.StockFinancialMapper;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -40,7 +40,7 @@ public class StockFinancialPerformanceServiceImpl implements StockFinancialPerfo
     private final FinancialResultRepository financialResultRepository;
     private final FactSheetRepository factSheetRepository;
     private final CashFlowRepository cashFlowRepository;
-    private final StockFinancialPerformanceMapper mapper;
+    private final StockFinancialMapper mapper;
     
     @Override
     public Optional<BoardOfDirectors> getBoardOfDirectors(String symbol) {

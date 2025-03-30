@@ -1,102 +1,102 @@
-// package com.am.common.investment.app.service;
+package com.am.common.investment.app.service;
 
-// import static org.junit.jupiter.api.Assertions.assertEquals;
-// import static org.junit.jupiter.api.Assertions.assertNotNull;
-// import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-// import com.am.common.investment.app.AmCommonInvestmentApplication;
-// import com.am.common.investment.app.config.MongoTestConfig;
-// import com.am.common.investment.app.config.TestContainersConfig;
-// import com.am.common.investment.model.events.StockInsidicesEventData;
-// import com.am.common.investment.model.events.mapper.StockIndicesEventDataMapper;
-// import com.am.common.investment.model.stockindice.StockIndicesMarketData;
-// import com.am.common.investment.service.StockIndicesMarketDataService;
-// import com.fasterxml.jackson.databind.ObjectMapper;
-// import org.junit.jupiter.api.AfterEach;
-// import org.junit.jupiter.api.BeforeEach;
-// import org.junit.jupiter.api.Test;
-// import org.springframework.beans.factory.annotation.Autowired;
-// import org.springframework.boot.test.context.SpringBootTest;
-// import org.springframework.test.context.ActiveProfiles;
-// import org.testcontainers.junit.jupiter.Testcontainers;
+import com.am.common.investment.app.AmCommonInvestmentApplication;
+import com.am.common.investment.app.config.MongoTestConfig;
+import com.am.common.investment.app.config.TestContainersConfig;
+import com.am.common.investment.model.events.StockInsidicesEventData;
+import com.am.common.investment.model.events.mapper.StockIndicesEventDataMapper;
+import com.am.common.investment.model.stockindice.StockIndicesMarketData;
+import com.am.common.investment.service.StockIndicesMarketDataService;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
-// import java.io.IOException;
-// import java.nio.file.Files;
-// import java.nio.file.Paths;
-// import java.util.List;
-// import java.util.Set;
-// import java.util.UUID;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 
-// @SpringBootTest(classes = {
-//     AmCommonInvestmentApplication.class,
-//     MongoTestConfig.class,
-//     TestContainersConfig.class
-// })
-// @ActiveProfiles("test")
-// @Testcontainers
-// public class StockIndicesMarketDataServiceIntegrationTest {
+@SpringBootTest(classes = {
+    AmCommonInvestmentApplication.class,
+    MongoTestConfig.class,
+    TestContainersConfig.class
+})
+@ActiveProfiles("test")
+@Testcontainers
+public class StockIndicesMarketDataServiceIntegrationTest {
 
-//     @Autowired
-//     private StockIndicesMarketDataService marketDataService;
+    @Autowired
+    private StockIndicesMarketDataService marketDataService;
 
-//     private StockInsidicesEventData eventData;
+    private StockInsidicesEventData eventData;
 
-//     @BeforeEach
-//     void setup() throws IOException {
-//         // Load test data from JSON file
-//         String json = new String(Files.readAllBytes(Paths.get("src/test/resources/stockindices.json")));
-//         ObjectMapper objectMapper = new ObjectMapper();
-//         eventData = objectMapper.readValue(json, StockInsidicesEventData.class);
-//     }
+    @BeforeEach
+    void setup() throws IOException {
+        // Load test data from JSON file
+        String json = new String(Files.readAllBytes(Paths.get("src/test/resources/stockindices.json")));
+        ObjectMapper objectMapper = new ObjectMapper();
+        eventData = objectMapper.readValue(json, StockInsidicesEventData.class);
+    }
 
-//     @Test
-//     void shouldSaveAndRetrieveStockIndicesMarketData() {
-//         // Given
-//         StockIndicesMarketData marketData = StockIndicesEventDataMapper.toMarketData(eventData);
+    @Test
+    void shouldSaveAndRetrieveStockIndicesMarketData() {
+        // Given
+        StockIndicesMarketData marketData = StockIndicesEventDataMapper.toMarketData(eventData);
 
-//         // When
-//         StockIndicesMarketData savedData = marketDataService.save(marketData);
+        // When
+        StockIndicesMarketData savedData = marketDataService.save(marketData);
 
-//         // Then
-//         assertNotNull(savedData);
-//         assertNotNull(savedData.getId());
-//         assertEquals("NIFTY 50", savedData.getIndexSymbol());
+        // Then
+        assertNotNull(savedData);
+        assertNotNull(savedData.getId());
+        assertEquals("NIFTY 50", savedData.getIndexSymbol());
 
-//         // Verify retrieval by index symbol
-//         StockIndicesMarketData retrievedData = marketDataService.findByIndexSymbol("NIFTY 50");
-//         assertNotNull(retrievedData);
-//         assertEquals(savedData.getId(), retrievedData.getId());
-//         assertEquals(savedData.getMetadata().getLast(), retrievedData.getMetadata().getLast(), 0.01);
-//     }
+        // Verify retrieval by index symbol
+        StockIndicesMarketData retrievedData = marketDataService.findByIndexSymbol("NIFTY 50");
+        assertNotNull(retrievedData);
+        assertEquals(savedData.getId(), retrievedData.getId());
+        assertEquals(savedData.getMetadata().getLast(), retrievedData.getMetadata().getLast(), 0.01);
+    }
 
-//     @Test
-//     void shouldRetrieveMultipleIndices() {
-//         // Given
-//         StockIndicesMarketData marketData = StockIndicesEventDataMapper.toMarketData(eventData);
-//         marketDataService.save(marketData);
+    @Test
+    void shouldRetrieveMultipleIndices() {
+        // Given
+        StockIndicesMarketData marketData = StockIndicesEventDataMapper.toMarketData(eventData);
+        marketDataService.save(marketData);
 
-//         // When
-//         List<StockIndicesMarketData> results = marketDataService.findByIndexSymbols(Set.of("NIFTY 50"));
+        // When
+        List<StockIndicesMarketData> results = marketDataService.findByIndexSymbols(Set.of("NIFTY 50"));
 
-//         // Then
-//         assertNotNull(results);
-//         assertEquals(1, results.size());
-//         StockIndicesMarketData result = results.get(0);
-//         assertEquals("NIFTY 50", result.getIndexSymbol());
-//         assertEquals(23658.35, result.getMetadata().getLast(), 0.01);
-//     }
+        // Then
+        assertNotNull(results);
+        assertEquals(1, results.size());
+        StockIndicesMarketData result = results.get(0);
+        assertEquals("NIFTY 50", result.getIndexSymbol());
+        assertEquals(23658.35, result.getMetadata().getLast(), 0.01);
+    }
 
-//     @Test
-//     void shouldHandleAuditData() {
-//         // Given
-//         StockIndicesMarketData marketData = StockIndicesEventDataMapper.toMarketData(eventData);
+    @Test
+    void shouldHandleAuditData() {
+        // Given
+        StockIndicesMarketData marketData = StockIndicesEventDataMapper.toMarketData(eventData);
 
-//         // When
-//         StockIndicesMarketData savedData = marketDataService.save(marketData);
+        // When
+        StockIndicesMarketData savedData = marketDataService.save(marketData);
 
-//         // Then
-//         assertNotNull(savedData.getAudit());
-//         assertNotNull(savedData.getAudit().getCreatedAt());
-//         assertNotNull(savedData.getAudit().getUpdatedAt());
-//     }
-// }
+        // Then
+        assertNotNull(savedData.getAudit());
+        assertNotNull(savedData.getAudit().getCreatedAt());
+        assertNotNull(savedData.getAudit().getUpdatedAt());
+    }
+}
