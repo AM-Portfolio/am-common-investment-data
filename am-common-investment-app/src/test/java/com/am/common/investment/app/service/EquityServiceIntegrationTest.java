@@ -6,7 +6,7 @@ import static com.am.common.investment.app.constant.AppConstants.Query.*;
 import static com.am.common.investment.app.util.TestAssertionUtil.*;
 
 import com.am.common.investment.app.InvestmentDataApplication;
-import com.am.common.investment.app.config.TestConfig;
+import com.am.common.investment.app.config.MongoTestConfig;
 import com.am.common.investment.app.config.TestContainersConfig;
 import com.am.common.investment.app.util.TestDataUtil;
 import com.am.common.investment.model.equity.EquityPrice;
@@ -29,7 +29,7 @@ import java.util.Optional;
 
 @SpringBootTest(classes = {
     InvestmentDataApplication.class,
-    TestConfig.class,
+    MongoTestConfig.class,
     TestContainersConfig.class
 })
 @ActiveProfiles("test")
