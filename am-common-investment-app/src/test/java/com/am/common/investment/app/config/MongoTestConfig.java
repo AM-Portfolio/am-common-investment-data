@@ -17,7 +17,9 @@ import org.testcontainers.junit.jupiter.Testcontainers;
     "com.am.common.investment.model.events.mapper",
     "com.am.common.investment.app",
     "com.am.common.investment.model",
-    "com.am.common.investment.app.service"
+    "com.am.common.investment.app.service",
+    "com.am.common.investment.app.config",
+    "com.am.common.investment.service.mapper"
 })
 @EnableMongoRepositories(basePackages = "com.am.common.investment.persistence.repository")
 @EnableMongoAuditing
