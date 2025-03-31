@@ -3,6 +3,7 @@ package com.am.common.investment.app.service;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -43,12 +44,18 @@ public class BoardOfDirectorsServiceIntegrationTest {
 
     @Test
     void shouldSaveAndRetrieveBoardOfDirectors() {
+        AuditData audit = TestDataUtil.createAudit(LocalDateTime.now(), "test");
         // Given
         String symbol = boardOfDirectors.getSymbol();
-        boardOfDirectors.setSymbol(symbol);
+        boardOfDirectors.setAudit(audit);
         
+        BoardOfDirectors boardOfDirectors_2 = boardOfDirectors;
+        boardOfDirectors_2.setAudit(TestDataUtil.createAudit(LocalDateTime.now(), "Munish"));
+
+
         // When
-        BoardOfDirectors savedBoardOfDirectors = stockFinancialPerformanceService.saveBoardOfDirectors(boardOfDirectors);
+        BoardOfDirectors savedBoardOfDirectors_1 = stockFinancialPerformanceService.saveBoardOfDirectors(boardOfDirectors);
+        BoardOfDirectors savedBoardOfDirectors_2 = stockFinancialPerformanceService.saveBoardOfDirectors(boardOfDirectors_2);
         Optional<BoardOfDirectors> retrievedBoardOfDirectors = stockFinancialPerformanceService.getBoardOfDirectors(symbol);
         
         // Then
@@ -68,7 +75,7 @@ public class BoardOfDirectorsServiceIntegrationTest {
         assertThat(retrievedDirector.getLastReelectionDate()).isEqualTo(originalDirector.getLastReelectionDate());
 
         // Verify all base model properties
-        AuditData originalAudit = savedBoardOfDirectors.getAudit();
+        AuditData originalAudit = savedBoardOfDirectors_1.getAudit();
         AuditData retrievedAudit = retrievedBoardOfDirectors.get().getAudit();
         
         assertThat(retrievedAudit.getCreatedBy()).isEqualTo(originalAudit.getCreatedBy());

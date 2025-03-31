@@ -16,20 +16,16 @@ public class TestDataUtil {
     public static BoardOfDirectors readBoardOfDirectorsFromResource(String resourcePath) throws IOException {
         // Read the JSON content from the resource file
         String json = new String(Files.readAllBytes(Paths.get("src/test/resources/" + resourcePath)));
-        AuditData audit = createAudit();
         // Use JsonUtils to parse the JSON into a BoardOfDirectors object
-        BoardOfDirectors boardOfDirectors = JsonUtils.fromJson(json, BoardOfDirectors.class);
-        boardOfDirectors.setAudit(audit);
-        return boardOfDirectors;
+        return JsonUtils.fromJson(json, BoardOfDirectors.class);
     }
 
-    private static AuditData createAudit() {
-        LocalDateTime now = LocalDateTime.now();
+    public static AuditData createAudit(LocalDateTime updatedAt, String updatedBy) {
         AuditData audit = AuditData.builder()
-        .createdAt(now)
-        .updatedAt(now)
-        .createdBy("test")
-        .updatedBy("test")
+        .createdAt(updatedAt)
+        .updatedAt(updatedAt)
+        .createdBy(updatedBy)
+        .updatedBy(updatedBy)
         .build();
         return audit;
     }
