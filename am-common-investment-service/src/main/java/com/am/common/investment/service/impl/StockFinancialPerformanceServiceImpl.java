@@ -11,6 +11,7 @@ import com.am.common.investment.model.equity.financial.cashflow.CashFlow;
 import com.am.common.investment.model.equity.financial.factsheetdividend.FactSheetDividend;
 import com.am.common.investment.model.equity.financial.profitandloss.ProfitAndLoss;
 import com.am.common.investment.model.equity.financial.resultstatement.FinancialResult;
+import com.am.common.investment.persistence.document.BaseDocument;
 import com.am.common.investment.persistence.document.companyprofile.BoardOfDirectorsDocument;
 import com.am.common.investment.persistence.document.stock.financial.balancesheet.BalanceSheetDocument;
 import com.am.common.investment.persistence.document.stock.financial.cashflow.CashFlowDocument;
@@ -23,8 +24,9 @@ import com.am.common.investment.persistence.repository.stock.financial.CashFlowR
 import com.am.common.investment.persistence.repository.stock.financial.FactSheetRepository;
 import com.am.common.investment.persistence.repository.stock.financial.FinancialResultRepository;
 import com.am.common.investment.persistence.repository.stock.financial.ProfitAndLossRepository;
+import com.am.common.investment.service.DocumentVersionService;
 import com.am.common.investment.service.StockFinancialPerformanceService;
-import com.am.common.investment.service.mapper.StockFinancialMapper;
+import com.am.common.investment.service.mapper.StockFinancialPerformanceMapper;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -40,7 +42,8 @@ public class StockFinancialPerformanceServiceImpl implements StockFinancialPerfo
     private final FinancialResultRepository financialResultRepository;
     private final FactSheetRepository factSheetRepository;
     private final CashFlowRepository cashFlowRepository;
-    private final StockFinancialMapper mapper;
+    private final StockFinancialPerformanceMapper mapper;
+    private final DocumentVersionService<BaseDocument> versionService;
     
     @Override
     public Optional<BoardOfDirectors> getBoardOfDirectors(String symbol) {
@@ -52,6 +55,10 @@ public class StockFinancialPerformanceServiceImpl implements StockFinancialPerfo
     @Transactional
     public BoardOfDirectors saveBoardOfDirectors(BoardOfDirectors boardOfDirectors) {
         BoardOfDirectorsDocument document = mapper.toDocument(boardOfDirectors);
+        
+        // Increment version before saving
+        versionService.incrementVersion(document);
+        
         BoardOfDirectorsDocument savedDocument = boardOfDirectorsRepository.save(document);
         return mapper.toModel(savedDocument);
     }
@@ -66,6 +73,10 @@ public class StockFinancialPerformanceServiceImpl implements StockFinancialPerfo
     @Transactional
     public ProfitAndLoss saveProfitAndLoss(ProfitAndLoss profitAndLoss) {
         ProfitAndLossDocument document = mapper.toDocument(profitAndLoss);
+        
+        // Increment version before saving
+        versionService.incrementVersion(document);
+        
         ProfitAndLossDocument savedDocument = profitAndLossRepository.save(document);
         return mapper.toModel(savedDocument);
     }
@@ -80,6 +91,10 @@ public class StockFinancialPerformanceServiceImpl implements StockFinancialPerfo
     @Transactional
     public BalanceSheet saveBalanceSheet(BalanceSheet balanceSheet) {
         BalanceSheetDocument document = mapper.toDocument(balanceSheet);
+        
+        // Increment version before saving
+        versionService.incrementVersion(document);
+        
         BalanceSheetDocument savedDocument = balanceSheetRepository.save(document);
         return mapper.toModel(savedDocument);
     }
@@ -94,6 +109,10 @@ public class StockFinancialPerformanceServiceImpl implements StockFinancialPerfo
     @Transactional
     public FinancialResult saveFinancialResult(FinancialResult financialResult) {
         FinancialResultDocument document = mapper.toDocument(financialResult);
+        
+        // Increment version before saving
+        versionService.incrementVersion(document);
+        
         FinancialResultDocument savedDocument = financialResultRepository.save(document);
         return mapper.toModel(savedDocument);
     }
@@ -108,6 +127,10 @@ public class StockFinancialPerformanceServiceImpl implements StockFinancialPerfo
     @Transactional
     public FactSheetDividend saveFactSheetDividend(FactSheetDividend factSheetDividend) {
         FactSheetDividendDocument document = mapper.toDocument(factSheetDividend);
+        
+        // Increment version before saving
+        versionService.incrementVersion(document);
+        
         FactSheetDividendDocument savedDocument = factSheetRepository.save(document);
         return mapper.toModel(savedDocument);
     }
@@ -122,6 +145,10 @@ public class StockFinancialPerformanceServiceImpl implements StockFinancialPerfo
     @Transactional
     public CashFlow saveCashFlow(CashFlow cashFlow) {
         CashFlowDocument document = mapper.toDocument(cashFlow);
+        
+        // Increment version before saving
+        versionService.incrementVersion(document);
+        
         CashFlowDocument savedDocument = cashFlowRepository.save(document);
         return mapper.toModel(savedDocument);
     }

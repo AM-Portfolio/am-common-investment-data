@@ -1,5 +1,6 @@
 package com.am.common.investment.persistence.repository.stock.financial;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -11,9 +12,9 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface BalanceSheetRepository extends MongoRepository<BalanceSheetDocument, UUID> {
-    Optional<BalanceSheetDocument> findBySymbol(String symbol, Sort sort);
+    List<BalanceSheetDocument> findBySymbol(String symbol, Sort sort);
 
     default Optional<BalanceSheetDocument> findBySymbolWithVersionAndTime(String symbol) {
-        return findBySymbol(symbol, Sort.by(Sort.Order.desc("docVersion"), Sort.Order.desc("audit.updatedAt")));
+        return findBySymbol(symbol, Sort.by(Sort.Order.desc("version"), Sort.Order.desc("audit.updatedAt"))).stream().findFirst();
     }
 }

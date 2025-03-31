@@ -20,7 +20,7 @@ import lombok.experimental.SuperBuilder;
 public class BaseModel {
     private UUID id;
     private String symbol;
-    private String docVersion;
+    private Integer version;
     private AuditData audit;
     private String source;
 }

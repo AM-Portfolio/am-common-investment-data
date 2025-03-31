@@ -9,11 +9,13 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import com.am.common.investment.model.equity.financial.BaseModel;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class BoardOfDirectors extends BaseModel{
     private List<Director> directors;
     

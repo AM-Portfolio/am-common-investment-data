@@ -19,7 +19,7 @@ public class DocumentVersionComparator {
      * Comparator that first compares document version and then update time
      */
     private static final Comparator<BaseDocument> VERSION_COMPARATOR = Comparator
-            .comparing(BaseDocument::getDocVersion)
+            .comparing(BaseDocument::getVersion)
             .thenComparing(doc -> doc.getAudit().getUpdatedAt());
 
     /**
@@ -72,6 +72,6 @@ public class DocumentVersionComparator {
      * @return Sort object for MongoDB queries
      */
     public static Sort getSortByVersionAndTime() {
-        return Sort.by(Sort.Order.desc("docVersion"), Sort.Order.desc("audit.updatedAt"));
+        return Sort.by(Sort.Order.desc("version"), Sort.Order.desc("audit.updatedAt"));
     }
 }

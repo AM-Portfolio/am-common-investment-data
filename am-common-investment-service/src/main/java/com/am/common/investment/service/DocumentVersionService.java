@@ -5,7 +5,7 @@ import com.am.common.investment.persistence.document.BaseDocument;
 /**
  * Service interface for managing document versions
  */
-public interface DocumentVersionService {
+public interface DocumentVersionService<T extends BaseDocument> {
     
     /**
      * Get the next version number for a document
@@ -13,7 +13,7 @@ public interface DocumentVersionService {
      * @param symbol The document symbol
      * @return The next version number
      */
-    String getNextVersion(String symbol);
+    Integer getNextVersion(String symbol);
     
     /**
      * Increment the version of a document
@@ -21,12 +21,12 @@ public interface DocumentVersionService {
      * @param document The document to increment version for
      * @return The updated document with incremented version
      */
-    BaseDocument incrementVersion(BaseDocument document);
+    T incrementVersion(T document);
     
     /**
      * Get the initial version for a new document
      * 
      * @return The initial version number
      */
-    String getInitialVersion();
+    Integer getInitialVersion();
 }

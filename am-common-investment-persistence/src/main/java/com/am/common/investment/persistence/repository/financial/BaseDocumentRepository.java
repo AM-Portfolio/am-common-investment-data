@@ -15,6 +15,6 @@ public interface BaseDocumentRepository<T extends BaseDocument, ID> extends Mong
     Optional<T> findBySymbol(String symbol, Sort sort);
 
     default Optional<T> findBySymbolWithVersionAndTime(String symbol) {
-        return findBySymbol(symbol, Sort.by(Sort.Order.desc("docVersion"), Sort.Order.desc("audit.updatedAt")));
+        return findBySymbol(symbol, Sort.by(Sort.Order.desc("version"), Sort.Order.desc("audit.updatedAt")));
     }
 }

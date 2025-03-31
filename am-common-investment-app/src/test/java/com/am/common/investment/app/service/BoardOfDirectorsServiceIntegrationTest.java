@@ -18,7 +18,7 @@ import com.am.common.investment.app.config.TestContainersConfig;
 import com.am.common.investment.app.util.TestDataUtil;
 import com.am.common.investment.model.board.BoardOfDirectors;
 import com.am.common.investment.model.board.Director;
-import com.am.common.investment.model.stockindice.AuditData;
+import com.am.common.investment.persistence.repository.companyprofile.BoardOfDirectorsRepository;
 import com.am.common.investment.service.StockFinancialPerformanceService;
 
 /**
@@ -34,8 +34,17 @@ public class BoardOfDirectorsServiceIntegrationTest {
 
     @Autowired
     private StockFinancialPerformanceService stockFinancialPerformanceService;
+    
+    @Autowired
+    private BoardOfDirectorsRepository boardOfDirectorsRepository;
 
     private BoardOfDirectors boardOfDirectors;
+
+    @BeforeEach
+    void cleanup() {
+        // Clean up any existing documents
+        boardOfDirectorsRepository.deleteAll();
+    }
 
     @BeforeEach
     void setup() throws IOException {
@@ -44,18 +53,17 @@ public class BoardOfDirectorsServiceIntegrationTest {
 
     @Test
     void shouldSaveAndRetrieveBoardOfDirectors() {
-        AuditData audit = TestDataUtil.createAudit(LocalDateTime.now(), "test");
         // Given
         String symbol = boardOfDirectors.getSymbol();
-        boardOfDirectors.setAudit(audit);
-        
+        boardOfDirectors.setAudit(TestDataUtil.createAudit(LocalDateTime.now(), "test"));
+        BoardOfDirectors savedBoardOfDirectors_1 = stockFinancialPerformanceService.saveBoardOfDirectors(boardOfDirectors);
+
+
         BoardOfDirectors boardOfDirectors_2 = boardOfDirectors;
         boardOfDirectors_2.setAudit(TestDataUtil.createAudit(LocalDateTime.now(), "Munish"));
-
-
-        // When
-        BoardOfDirectors savedBoardOfDirectors_1 = stockFinancialPerformanceService.saveBoardOfDirectors(boardOfDirectors);
         BoardOfDirectors savedBoardOfDirectors_2 = stockFinancialPerformanceService.saveBoardOfDirectors(boardOfDirectors_2);
+
+
         Optional<BoardOfDirectors> retrievedBoardOfDirectors = stockFinancialPerformanceService.getBoardOfDirectors(symbol);
         
         // Then
@@ -73,12 +81,16 @@ public class BoardOfDirectorsServiceIntegrationTest {
         assertThat(retrievedDirector.getCompanyId()).isEqualTo(originalDirector.getCompanyId());
         assertThat(retrievedDirector.getAppointmentDate()).isEqualTo(originalDirector.getAppointmentDate());
         assertThat(retrievedDirector.getLastReelectionDate()).isEqualTo(originalDirector.getLastReelectionDate());
-
-        // Verify all base model properties
-        AuditData originalAudit = savedBoardOfDirectors_1.getAudit();
-        AuditData retrievedAudit = retrievedBoardOfDirectors.get().getAudit();
         
-        assertThat(retrievedAudit.getCreatedBy()).isEqualTo(originalAudit.getCreatedBy());
-        assertThat(retrievedAudit.getUpdatedBy()).isEqualTo(originalAudit.getUpdatedBy());
+        // Verify versioning
+        assertThat(savedBoardOfDirectors_1.getVersion()).isEqualTo(2);
+        assertThat(savedBoardOfDirectors_2.getVersion()).isEqualTo(2);
+        assertThat(retrievedBoardOfDirectors.get().getVersion()).isEqualTo(2);
+
+        Optional<BoardOfDirectors> boardOfDirectors = stockFinancialPerformanceService.getBoardOfDirectors("AMZ");
+        
+        // Then
+        assertThat(boardOfDirectors).isNotPresent();
+
     }
 }

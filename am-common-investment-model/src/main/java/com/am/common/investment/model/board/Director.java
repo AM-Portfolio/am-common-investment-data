@@ -6,10 +6,13 @@ import lombok.Builder;
 import lombok.AllArgsConstructor;
 import java.time.LocalDate;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Director {
     private String dirName;
     private String reportedDsg;
