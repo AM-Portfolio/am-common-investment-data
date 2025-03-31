@@ -18,8 +18,9 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class FinancialResult extends BaseModel {
+public class FinancialResult{
     private String yearEnd;
+    private String quarter;
     
     // Revenue Metrics
     private double totalRevenue;

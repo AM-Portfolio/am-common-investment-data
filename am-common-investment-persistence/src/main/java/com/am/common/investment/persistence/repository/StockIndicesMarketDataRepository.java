@@ -13,7 +13,7 @@ import java.util.UUID;
  * MongoDB repository for stock indices market data
  */
 @Repository
-public interface StockIndicesMarketDataRepository extends MongoRepository<StockIndicesMarketDataDocument, UUID> {
+public interface StockIndicesMarketDataRepository extends MongoRepository<StockIndicesMarketDataDocument, String> {
     
     /**
      * Find stock indices market data by multiple index symbols with sorting

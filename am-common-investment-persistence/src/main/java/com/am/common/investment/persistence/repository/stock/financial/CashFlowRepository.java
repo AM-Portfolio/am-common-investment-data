@@ -11,7 +11,7 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface CashFlowRepository extends MongoRepository<CashFlowDocument, UUID> {
+public interface CashFlowRepository extends MongoRepository<CashFlowDocument, String> {
     List<CashFlowDocument> findBySymbol(String symbol, Sort sort);
 
     default Optional<CashFlowDocument> findBySymbolWithVersionAndTime(String symbol) {

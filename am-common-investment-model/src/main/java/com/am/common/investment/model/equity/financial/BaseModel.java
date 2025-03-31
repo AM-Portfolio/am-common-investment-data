@@ -18,7 +18,7 @@ import lombok.experimental.SuperBuilder;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class BaseModel {
-    private UUID id;
+    private String id;
     private String symbol;
     private Integer version;
     private AuditData audit;

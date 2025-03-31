@@ -22,7 +22,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class StockIndicesMarketData {
-    private UUID id;
+    private String id;
     private String indexSymbol;
     private List<StockData> data;
     private IndexMetadata metadata;

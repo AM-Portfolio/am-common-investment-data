@@ -28,7 +28,7 @@ import java.util.UUID;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class BaseDocument {
     @Id
-    private UUID id;
+    private String id;
     
     @Indexed
     private String symbol;

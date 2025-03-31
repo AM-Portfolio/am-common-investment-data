@@ -8,13 +8,12 @@ import com.am.common.investment.persistence.document.companyprofile.BoardOfDirec
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 /**
  * Repository for accessing BoardOfDirectorsDocument in MongoDB
  */
 @Repository
-public interface BoardOfDirectorsRepository extends MongoRepository<BoardOfDirectorsDocument, UUID> {
+public interface BoardOfDirectorsRepository extends MongoRepository<BoardOfDirectorsDocument, String> {
     List<BoardOfDirectorsDocument> findBySymbol(String symbol, Sort sort);
 
     default Optional<BoardOfDirectorsDocument> findBySymbolWithVersionAndTime(String symbol) {

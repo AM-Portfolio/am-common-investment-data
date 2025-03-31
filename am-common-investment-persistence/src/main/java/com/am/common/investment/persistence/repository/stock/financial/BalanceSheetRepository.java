@@ -11,7 +11,7 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface BalanceSheetRepository extends MongoRepository<BalanceSheetDocument, UUID> {
+public interface BalanceSheetRepository extends MongoRepository<BalanceSheetDocument, String> {
     List<BalanceSheetDocument> findBySymbol(String symbol, Sort sort);
 
     default Optional<BalanceSheetDocument> findBySymbolWithVersionAndTime(String symbol) {

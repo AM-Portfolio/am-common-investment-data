@@ -11,7 +11,7 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface FactSheetRepository extends MongoRepository<FactSheetDividendDocument, UUID> {
+public interface FactSheetRepository extends MongoRepository<FactSheetDividendDocument, String> {
     List<FactSheetDividendDocument> findBySymbol(String symbol, Sort sort);
 
     default Optional<FactSheetDividendDocument> findBySymbolWithVersionAndTime(String symbol) {

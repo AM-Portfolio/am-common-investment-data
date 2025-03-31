@@ -10,7 +10,7 @@ import com.am.common.investment.persistence.document.BaseDocument;
 /**
  * Generic repository interface for financial documents with version and time sorting
  */
-public interface BaseDocumentRepository<T extends BaseDocument, ID> extends MongoRepository<T, ID> {
+public interface BaseDocumentRepository<T extends BaseDocument, ID> extends MongoRepository<T, String> {
     
     Optional<T> findBySymbol(String symbol, Sort sort);
 

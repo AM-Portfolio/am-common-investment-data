@@ -10,14 +10,14 @@ import com.am.common.investment.model.equity.financial.balancesheet.BalanceSheet
 import com.am.common.investment.model.equity.financial.cashflow.CashFlow;
 import com.am.common.investment.model.equity.financial.factsheetdividend.FactSheetDividend;
 import com.am.common.investment.model.equity.financial.profitandloss.ProfitAndLoss;
-import com.am.common.investment.model.equity.financial.resultstatement.FinancialResult;
+import com.am.common.investment.model.equity.financial.resultstatement.QuaterlyResult;
 import com.am.common.investment.persistence.document.BaseDocument;
 import com.am.common.investment.persistence.document.companyprofile.BoardOfDirectorsDocument;
 import com.am.common.investment.persistence.document.stock.financial.balancesheet.BalanceSheetDocument;
 import com.am.common.investment.persistence.document.stock.financial.cashflow.CashFlowDocument;
 import com.am.common.investment.persistence.document.stock.financial.factsheetdividend.FactSheetDividendDocument;
 import com.am.common.investment.persistence.document.stock.financial.profitandloss.ProfitAndLossDocument;
-import com.am.common.investment.persistence.document.stock.financial.result.FinancialResultDocument;
+import com.am.common.investment.persistence.document.stock.financial.result.QuaterlyFinancialResultDocument;
 import com.am.common.investment.persistence.repository.companyprofile.BoardOfDirectorsRepository;
 import com.am.common.investment.persistence.repository.stock.financial.BalanceSheetRepository;
 import com.am.common.investment.persistence.repository.stock.financial.CashFlowRepository;
@@ -100,20 +100,20 @@ public class StockFinancialPerformanceServiceImpl implements StockFinancialPerfo
     }
     
     @Override
-    public Optional<FinancialResult> getFinancialResult(String symbol) {
-        Optional<FinancialResultDocument> document = financialResultRepository.findBySymbolWithVersionAndTime(symbol);
+    public Optional<QuaterlyResult> getQuaterlyResult(String symbol) {
+        Optional<QuaterlyFinancialResultDocument> document = financialResultRepository.findBySymbolWithVersionAndTime(symbol);
         return document.map(mapper::toModel);
     }
     
     @Override
     @Transactional
-    public FinancialResult saveFinancialResult(FinancialResult financialResult) {
-        FinancialResultDocument document = mapper.toDocument(financialResult);
+    public QuaterlyResult saveQuaterlyResult(QuaterlyResult quaterlyResult) {
+        QuaterlyFinancialResultDocument document = mapper.toDocument(quaterlyResult);
         
         // Increment version before saving
         versionService.incrementVersion(document);
         
-        FinancialResultDocument savedDocument = financialResultRepository.save(document);
+        QuaterlyFinancialResultDocument savedDocument = financialResultRepository.save(document);
         return mapper.toModel(savedDocument);
     }
     

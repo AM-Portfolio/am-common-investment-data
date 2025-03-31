@@ -28,7 +28,7 @@ public class StockIndicesEventDataMapper {
                 .build();
                 
         return StockIndicesMarketData.builder()
-                .id(UUID.randomUUID())
+                .id(UUID.randomUUID().toString())
                 .indexSymbol(eventData.getName())
                 .data(Optional.ofNullable(eventData.getData())
                         .orElse(List.of())
