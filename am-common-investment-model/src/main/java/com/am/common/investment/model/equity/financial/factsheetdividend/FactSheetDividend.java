@@ -17,6 +17,9 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class FactSheetDividend extends BaseModel{
+
+    private String yearEnd;
+    private String quarter;
     
     // Growth Metrics
     private GrowthMetrics growthMetrics;

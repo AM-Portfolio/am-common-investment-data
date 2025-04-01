@@ -17,6 +17,8 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class CashFlow extends BaseModel{
+    private String yearEnd;
+    private String quarter;
     
     // Operating Activities
     private CashFlowOperatingMetrics operatingMetrics;

@@ -15,6 +15,6 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class QuaterlyResult extends BaseModel {
+public class StockFinancialResult extends BaseModel {
     private List<FinancialResult> financialResults;
 }

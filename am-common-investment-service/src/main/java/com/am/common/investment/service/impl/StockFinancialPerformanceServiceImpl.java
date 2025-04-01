@@ -6,23 +6,26 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.am.common.investment.model.board.BoardOfDirectors;
-import com.am.common.investment.model.equity.financial.balancesheet.BalanceSheet;
-import com.am.common.investment.model.equity.financial.cashflow.CashFlow;
-import com.am.common.investment.model.equity.financial.factsheetdividend.FactSheetDividend;
-import com.am.common.investment.model.equity.financial.profitandloss.ProfitAndLoss;
+import com.am.common.investment.model.equity.financial.balancesheet.StockBalanceSheet;
+import com.am.common.investment.model.equity.financial.cashflow.StockCashFlow;
+import com.am.common.investment.model.equity.financial.factsheetdividend.StockFactSheetDividend;
+import com.am.common.investment.model.equity.financial.profitandloss.StockProfitAndLoss;
 import com.am.common.investment.model.equity.financial.resultstatement.QuaterlyResult;
+import com.am.common.investment.model.equity.financial.resultstatement.StockFinancialResult;
 import com.am.common.investment.persistence.document.BaseDocument;
 import com.am.common.investment.persistence.document.companyprofile.BoardOfDirectorsDocument;
 import com.am.common.investment.persistence.document.stock.financial.balancesheet.BalanceSheetDocument;
 import com.am.common.investment.persistence.document.stock.financial.cashflow.CashFlowDocument;
 import com.am.common.investment.persistence.document.stock.financial.factsheetdividend.FactSheetDividendDocument;
 import com.am.common.investment.persistence.document.stock.financial.profitandloss.ProfitAndLossDocument;
+import com.am.common.investment.persistence.document.stock.financial.result.FinancialResultDocument;
 import com.am.common.investment.persistence.document.stock.financial.result.QuaterlyFinancialResultDocument;
 import com.am.common.investment.persistence.repository.companyprofile.BoardOfDirectorsRepository;
 import com.am.common.investment.persistence.repository.stock.financial.BalanceSheetRepository;
 import com.am.common.investment.persistence.repository.stock.financial.CashFlowRepository;
 import com.am.common.investment.persistence.repository.stock.financial.FactSheetRepository;
 import com.am.common.investment.persistence.repository.stock.financial.FinancialResultRepository;
+import com.am.common.investment.persistence.repository.stock.financial.QuaterlyFinancialResultRepository;
 import com.am.common.investment.persistence.repository.stock.financial.ProfitAndLossRepository;
 import com.am.common.investment.service.DocumentVersionService;
 import com.am.common.investment.service.StockFinancialPerformanceService;
@@ -39,6 +42,7 @@ public class StockFinancialPerformanceServiceImpl implements StockFinancialPerfo
     private final BoardOfDirectorsRepository boardOfDirectorsRepository;
     private final ProfitAndLossRepository profitAndLossRepository;
     private final BalanceSheetRepository balanceSheetRepository;
+    private final QuaterlyFinancialResultRepository quaterlyFinancialResultRepository;
     private final FinancialResultRepository financialResultRepository;
     private final FactSheetRepository factSheetRepository;
     private final CashFlowRepository cashFlowRepository;
@@ -64,14 +68,14 @@ public class StockFinancialPerformanceServiceImpl implements StockFinancialPerfo
     }
     
     @Override
-    public Optional<ProfitAndLoss> getProfitAndLoss(String symbol) {
+    public Optional<StockProfitAndLoss> getProfitAndLoss(String symbol) {
         Optional<ProfitAndLossDocument> document = profitAndLossRepository.findBySymbolWithVersionAndTime(symbol);
         return document.map(mapper::toModel);
     }
     
     @Override
     @Transactional
-    public ProfitAndLoss saveProfitAndLoss(ProfitAndLoss profitAndLoss) {
+    public StockProfitAndLoss saveProfitAndLoss(StockProfitAndLoss profitAndLoss) {
         ProfitAndLossDocument document = mapper.toDocument(profitAndLoss);
         
         // Increment version before saving
@@ -82,14 +86,14 @@ public class StockFinancialPerformanceServiceImpl implements StockFinancialPerfo
     }
     
     @Override
-    public Optional<BalanceSheet> getBalanceSheet(String symbol) {
+    public Optional<StockBalanceSheet> getBalanceSheet(String symbol) {
         Optional<BalanceSheetDocument> document = balanceSheetRepository.findBySymbolWithVersionAndTime(symbol);
         return document.map(mapper::toModel);
     }
     
     @Override
     @Transactional
-    public BalanceSheet saveBalanceSheet(BalanceSheet balanceSheet) {
+    public StockBalanceSheet saveBalanceSheet(StockBalanceSheet balanceSheet) {
         BalanceSheetDocument document = mapper.toDocument(balanceSheet);
         
         // Increment version before saving
@@ -101,7 +105,7 @@ public class StockFinancialPerformanceServiceImpl implements StockFinancialPerfo
     
     @Override
     public Optional<QuaterlyResult> getQuaterlyResult(String symbol) {
-        Optional<QuaterlyFinancialResultDocument> document = financialResultRepository.findBySymbolWithVersionAndTime(symbol);
+        Optional<QuaterlyFinancialResultDocument> document = quaterlyFinancialResultRepository.findBySymbolWithVersionAndTime(symbol);
         return document.map(mapper::toModel);
     }
     
@@ -113,19 +117,19 @@ public class StockFinancialPerformanceServiceImpl implements StockFinancialPerfo
         // Increment version before saving
         versionService.incrementVersion(document);
         
-        QuaterlyFinancialResultDocument savedDocument = financialResultRepository.save(document);
+        QuaterlyFinancialResultDocument savedDocument = quaterlyFinancialResultRepository.save(document);
         return mapper.toModel(savedDocument);
     }
     
     @Override
-    public Optional<FactSheetDividend> getFactSheetDividend(String symbol) {
+    public Optional<StockFactSheetDividend> getFactSheetDividend(String symbol) {
         Optional<FactSheetDividendDocument> document = factSheetRepository.findBySymbolWithVersionAndTime(symbol);
         return document.map(mapper::toModel);
     }
     
     @Override
     @Transactional
-    public FactSheetDividend saveFactSheetDividend(FactSheetDividend factSheetDividend) {
+    public StockFactSheetDividend saveFactSheetDividend(StockFactSheetDividend factSheetDividend) {
         FactSheetDividendDocument document = mapper.toDocument(factSheetDividend);
         
         // Increment version before saving
@@ -136,20 +140,37 @@ public class StockFinancialPerformanceServiceImpl implements StockFinancialPerfo
     }
     
     @Override
-    public Optional<CashFlow> getCashFlow(String symbol) {
+    public Optional<StockCashFlow> getCashFlow(String symbol) {
         Optional<CashFlowDocument> document = cashFlowRepository.findBySymbolWithVersionAndTime(symbol);
         return document.map(mapper::toModel);
     }
     
     @Override
     @Transactional
-    public CashFlow saveCashFlow(CashFlow cashFlow) {
+    public StockCashFlow saveCashFlow(StockCashFlow cashFlow) {
         CashFlowDocument document = mapper.toDocument(cashFlow);
         
         // Increment version before saving
         versionService.incrementVersion(document);
         
         CashFlowDocument savedDocument = cashFlowRepository.save(document);
+        return mapper.toModel(savedDocument);
+    }
+
+    @Override
+    public Optional<StockFinancialResult> getFinancialResult(String symbol) {
+        Optional<FinancialResultDocument> document = financialResultRepository.findBySymbolWithVersionAndTime(symbol);
+        return document.map(mapper::toModel);
+    }
+
+    @Override
+    public StockFinancialResult saveFinancialResult(StockFinancialResult financialResult) {
+        FinancialResultDocument document = mapper.toDocument(financialResult);
+        
+        // Increment version before saving
+        versionService.incrementVersion(document);
+        
+        FinancialResultDocument savedDocument = financialResultRepository.save(document);
         return mapper.toModel(savedDocument);
     }
 }

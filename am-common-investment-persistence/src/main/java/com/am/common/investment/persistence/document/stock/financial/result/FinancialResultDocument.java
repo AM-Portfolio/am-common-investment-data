@@ -1,10 +1,10 @@
-package com.am.common.investment.persistence.document.stock.financial.profitandloss;
+package com.am.common.investment.persistence.document.stock.financial.result;
 
 import java.util.List;
 
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import com.am.common.investment.model.equity.financial.profitandloss.ProfitAndLoss;
+import com.am.common.investment.model.equity.financial.resultstatement.FinancialResult;
 import com.am.common.investment.persistence.document.BaseDocument;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -20,7 +20,7 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-@Document(collection = "profit_and_loss")
-public class ProfitAndLossDocument extends BaseDocument{
-    private List<ProfitAndLoss> profitAndLoss;
+@Document(collection = "financial_result")
+public class FinancialResultDocument extends BaseDocument {
+    private List<FinancialResult> financialResults;
 }

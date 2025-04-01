@@ -1,4 +1,4 @@
-package com.am.common.investment.model.equity.financial.resultstatement;
+package com.am.common.investment.model.equity.financial.balancesheet;
 
 import java.util.List;
 
@@ -15,6 +15,6 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class QuaterlyResult extends BaseModel {
-    private List<FinancialResult> financialResults;
+public class StockBalanceSheet extends BaseModel{
+    private List<BalanceSheet> balanceSheet;
 }

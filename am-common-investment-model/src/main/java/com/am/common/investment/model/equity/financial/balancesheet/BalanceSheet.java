@@ -17,6 +17,8 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class BalanceSheet extends BaseModel{
+    private String yearEnd;
+    private String quarter;
     
     // Total Metrics
     private Double assets;

@@ -19,7 +19,8 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ProfitAndLoss extends BaseModel{
-    
+    private String yearEnd;
+    private String quarter;
     // Revenue Metrics
     private Double totalRevenue;
     private Double operatingRevenue;

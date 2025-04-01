@@ -1,11 +1,12 @@
 package com.am.common.investment.service;
 
 import com.am.common.investment.model.board.BoardOfDirectors;
-import com.am.common.investment.model.equity.financial.balancesheet.BalanceSheet;
-import com.am.common.investment.model.equity.financial.cashflow.CashFlow;
-import com.am.common.investment.model.equity.financial.factsheetdividend.FactSheetDividend;
-import com.am.common.investment.model.equity.financial.profitandloss.ProfitAndLoss;
+import com.am.common.investment.model.equity.financial.balancesheet.StockBalanceSheet;
+import com.am.common.investment.model.equity.financial.cashflow.StockCashFlow;
+import com.am.common.investment.model.equity.financial.factsheetdividend.StockFactSheetDividend;
+import com.am.common.investment.model.equity.financial.profitandloss.StockProfitAndLoss;
 import com.am.common.investment.model.equity.financial.resultstatement.QuaterlyResult;
+import com.am.common.investment.model.equity.financial.resultstatement.StockFinancialResult;
 
 import java.util.Optional;
 
@@ -16,18 +17,21 @@ public interface StockFinancialPerformanceService {
     Optional<BoardOfDirectors> getBoardOfDirectors(String symbol);
     BoardOfDirectors saveBoardOfDirectors(BoardOfDirectors boardOfDirectors);
 
-    Optional<ProfitAndLoss> getProfitAndLoss(String symbol);
-    ProfitAndLoss saveProfitAndLoss(ProfitAndLoss profitAndLoss);
+    Optional<StockProfitAndLoss> getProfitAndLoss(String symbol);
+    StockProfitAndLoss saveProfitAndLoss(StockProfitAndLoss profitAndLoss);
 
-    Optional<BalanceSheet> getBalanceSheet(String symbol);
-    BalanceSheet saveBalanceSheet(BalanceSheet balanceSheet);
+    Optional<StockBalanceSheet> getBalanceSheet(String symbol);
+    StockBalanceSheet saveBalanceSheet(StockBalanceSheet balanceSheet);
 
-    Optional<FactSheetDividend> getFactSheetDividend(String symbol);
-    FactSheetDividend saveFactSheetDividend(FactSheetDividend factSheetDividend);
+    Optional<StockFactSheetDividend> getFactSheetDividend(String symbol);
+    StockFactSheetDividend saveFactSheetDividend(StockFactSheetDividend factSheetDividend);
 
-    Optional<CashFlow> getCashFlow(String symbol);
-    CashFlow saveCashFlow(CashFlow cashFlow);
+    Optional<StockCashFlow> getCashFlow(String symbol);
+    StockCashFlow saveCashFlow(StockCashFlow cashFlow);
 
     Optional<QuaterlyResult> getQuaterlyResult(String symbol);
     QuaterlyResult saveQuaterlyResult(QuaterlyResult quaterlyResult);
+
+    Optional<StockFinancialResult> getFinancialResult(String symbol);
+    StockFinancialResult saveFinancialResult(StockFinancialResult financialResult);
 }

@@ -1,10 +1,10 @@
 package com.am.common.investment.persistence.document.stock.financial.cashflow;
 
+import java.util.List;
+
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import com.am.common.investment.model.equity.metrics.CashFlowFinancingMetrics;
-import com.am.common.investment.model.equity.metrics.CashFlowInvestingMetrics;
-import com.am.common.investment.model.equity.metrics.CashFlowOperatingMetrics;
+import com.am.common.investment.model.equity.financial.cashflow.CashFlow;
 import com.am.common.investment.persistence.document.BaseDocument;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -22,17 +22,5 @@ import lombok.experimental.SuperBuilder;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Document(collection = "cash_flow")
 public class CashFlowDocument extends BaseDocument{
-    
-    // Operating Activities
-    private CashFlowOperatingMetrics operatingMetrics;
-    
-    // Investing Activities
-    private CashFlowInvestingMetrics investingMetrics;
-    
-    // Financing Activities
-    private CashFlowFinancingMetrics financingMetrics;
-    
-    // Summary Metrics
-    private Double netCashFlow;
-    private Double freeCashFlow;
+    private List<CashFlow> cashFlow;
 }

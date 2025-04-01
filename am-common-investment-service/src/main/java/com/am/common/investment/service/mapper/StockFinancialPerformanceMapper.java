@@ -1,16 +1,18 @@
 package com.am.common.investment.service.mapper;
 
 import com.am.common.investment.model.board.BoardOfDirectors;
-import com.am.common.investment.model.equity.financial.balancesheet.BalanceSheet;
-import com.am.common.investment.model.equity.financial.cashflow.CashFlow;
-import com.am.common.investment.model.equity.financial.factsheetdividend.FactSheetDividend;
-import com.am.common.investment.model.equity.financial.profitandloss.ProfitAndLoss;
+import com.am.common.investment.model.equity.financial.balancesheet.StockBalanceSheet;
+import com.am.common.investment.model.equity.financial.cashflow.StockCashFlow;
+import com.am.common.investment.model.equity.financial.factsheetdividend.StockFactSheetDividend;
+import com.am.common.investment.model.equity.financial.profitandloss.StockProfitAndLoss;
 import com.am.common.investment.model.equity.financial.resultstatement.QuaterlyResult;
+import com.am.common.investment.model.equity.financial.resultstatement.StockFinancialResult;
 import com.am.common.investment.persistence.document.companyprofile.BoardOfDirectorsDocument;
 import com.am.common.investment.persistence.document.stock.financial.balancesheet.BalanceSheetDocument;
 import com.am.common.investment.persistence.document.stock.financial.cashflow.CashFlowDocument;
 import com.am.common.investment.persistence.document.stock.financial.factsheetdividend.FactSheetDividendDocument;
 import com.am.common.investment.persistence.document.stock.financial.profitandloss.ProfitAndLossDocument;
+import com.am.common.investment.persistence.document.stock.financial.result.FinancialResultDocument;
 import com.am.common.investment.persistence.document.stock.financial.result.QuaterlyFinancialResultDocument;
 import org.springframework.stereotype.Component;
 
@@ -64,27 +66,22 @@ public class StockFinancialPerformanceMapper {
     }
 
     // Cash Flow mapping
-    public CashFlow toModel(CashFlowDocument document) {
+    public StockCashFlow toModel(CashFlowDocument document) {
         if (document == null) {
             return null;
         }
         
-        CashFlow model = new CashFlow();
+        StockCashFlow model = new StockCashFlow();
         model.setId(document.getId());
         model.setSymbol(document.getSymbol());
         model.setVersion(document.getVersion());
         model.setAudit(document.getAudit());
         model.setSource(document.getSource());
-        model.setOperatingMetrics(document.getOperatingMetrics());
-        model.setInvestingMetrics(document.getInvestingMetrics());
-        model.setFinancingMetrics(document.getFinancingMetrics());
-        model.setNetCashFlow(document.getNetCashFlow());
-        model.setFreeCashFlow(document.getFreeCashFlow());
-        
+        model.setCashFlow(document.getCashFlow());
         return model;
     }
     
-    public CashFlowDocument toDocument(CashFlow model) {
+    public CashFlowDocument toDocument(StockCashFlow model) {
         if (model == null) {
             return null;
         }
@@ -95,38 +92,29 @@ public class StockFinancialPerformanceMapper {
         document.setVersion(model.getVersion());
         document.setAudit(model.getAudit());
         document.setSource(model.getSource());
-        document.setOperatingMetrics(model.getOperatingMetrics());
-        document.setInvestingMetrics(model.getInvestingMetrics());
-        document.setFinancingMetrics(model.getFinancingMetrics());
-        document.setNetCashFlow(model.getNetCashFlow());
-        document.setFreeCashFlow(model.getFreeCashFlow());
+        document.setCashFlow(model.getCashFlow());
         
         return document;
     }
 
     // Balance Sheet mapping
-    public BalanceSheet toModel(BalanceSheetDocument document) {
+    public StockBalanceSheet toModel(BalanceSheetDocument document) {
         if (document == null) {
             return null;
         }
         
-        BalanceSheet model = new BalanceSheet();
+        StockBalanceSheet model = new StockBalanceSheet();
         model.setId(document.getId());
         model.setSymbol(document.getSymbol());
         model.setVersion(document.getVersion());
         model.setAudit(document.getAudit());
         model.setSource(document.getSource());
-        model.setAssets(document.getAssets());
-        model.setLiabilitiesEquity(document.getLiabilitiesEquity());
-        model.setTotalDebits(document.getTotalDebits());
-        model.setAssetsMetrics(document.getAssetsMetrics());
-        model.setLiabilitiesMetrics(document.getLiabilitiesMetrics());
-        model.setEquityMetrics(document.getEquityMetrics());
+        model.setBalanceSheet(document.getBalanceSheet());
         
         return model;
     }
     
-    public BalanceSheetDocument toDocument(BalanceSheet model) {
+    public BalanceSheetDocument toDocument(StockBalanceSheet model) {
         if (model == null) {
             return null;
         }
@@ -137,40 +125,29 @@ public class StockFinancialPerformanceMapper {
         document.setVersion(model.getVersion());
         document.setAudit(model.getAudit());
         document.setSource(model.getSource());
-        document.setAssets(model.getAssets());
-        document.setLiabilitiesEquity(model.getLiabilitiesEquity());
-        document.setTotalDebits(model.getTotalDebits());
-        document.setAssetsMetrics(model.getAssetsMetrics());
-        document.setLiabilitiesMetrics(model.getLiabilitiesMetrics());
-        document.setEquityMetrics(model.getEquityMetrics());
+        document.setBalanceSheet(model.getBalanceSheet());
         
         return document;
     }
 
     // Profit and Loss mapping
-    public ProfitAndLoss toModel(ProfitAndLossDocument document) {
+    public StockProfitAndLoss toModel(ProfitAndLossDocument document) {
         if (document == null) {
             return null;
         }
         
-        ProfitAndLoss model = new ProfitAndLoss();
+        StockProfitAndLoss model = new StockProfitAndLoss();
         model.setId(document.getId());
         model.setSymbol(document.getSymbol());
         model.setVersion(document.getVersion());
         model.setAudit(document.getAudit());
         model.setSource(document.getSource());
-        model.setTotalRevenue(document.getTotalRevenue());
-        model.setOperatingRevenue(document.getOperatingRevenue());
-        model.setCostMetrics(document.getCostMetrics());
-        model.setProfitMetrics(document.getProfitMetrics());
-        model.setGrowthMetrics(document.getGrowthMetrics());
-        model.setEpsMetrics(document.getEpsMetrics());
-        model.setTaxMetrics(document.getTaxMetrics());
+        model.setProfitAndLoss(document.getProfitAndLoss());
         
         return model;
     }
     
-    public ProfitAndLossDocument toDocument(ProfitAndLoss model) {
+    public ProfitAndLossDocument toDocument(StockProfitAndLoss model) {
         if (model == null) {
             return null;
         }
@@ -181,48 +158,29 @@ public class StockFinancialPerformanceMapper {
         document.setVersion(model.getVersion());
         document.setAudit(model.getAudit());
         document.setSource(model.getSource());
-        document.setTotalRevenue(model.getTotalRevenue());
-        document.setOperatingRevenue(model.getOperatingRevenue());
-        document.setCostMetrics(model.getCostMetrics());
-        document.setProfitMetrics(model.getProfitMetrics());
-        document.setGrowthMetrics(model.getGrowthMetrics());
-        document.setEpsMetrics(model.getEpsMetrics());
-        document.setTaxMetrics(model.getTaxMetrics());
+        document.setProfitAndLoss(model.getProfitAndLoss());
         
         return document;
     }
 
     // FactSheet Dividend mapping
-    public FactSheetDividend toModel(FactSheetDividendDocument document) {
+    public StockFactSheetDividend toModel(FactSheetDividendDocument document) {
         if (document == null) {
             return null;
         }
         
-        FactSheetDividend model = new FactSheetDividend();
+        StockFactSheetDividend model = new StockFactSheetDividend();
         model.setId(document.getId());
         model.setSymbol(document.getSymbol());
         model.setVersion(document.getVersion());
         model.setAudit(document.getAudit());
         model.setSource(document.getSource());
-        model.setGrowthMetrics(document.getGrowthMetrics());
-        model.setFinancialRatios(document.getFinancialRatios());
-        model.setDividendMetrics(document.getDividendMetrics());
-        model.setAssetTurnoverRatio(document.getAssetTurnoverRatio());
-        model.setWorkingCapitalDays(document.getWorkingCapitalDays());
-        model.setInventoryTurnoverRatio(document.getInventoryTurnoverRatio());
-        model.setAdjEarningsPerShare(document.getAdjEarningsPerShare());
-        model.setEnterpriseValue(document.getEnterpriseValue());
-        model.setPegRatio(document.getPegRatio());
-        model.setPriceSalesRatio(document.getPriceSalesRatio());
-        model.setAdjDividendPerShare(document.getAdjDividendPerShare());
-        model.setFreeCashFlowPerShare(document.getFreeCashFlowPerShare());
-        model.setCashConversionCycle(document.getCashConversionCycle());
-        model.setFreeCashFlowYield(document.getFreeCashFlowYield());
+        model.setFactSheetDividend(document.getFactSheetDividend());
         
         return model;
     }
     
-    public FactSheetDividendDocument toDocument(FactSheetDividend model) {
+    public FactSheetDividendDocument toDocument(StockFactSheetDividend model) {
         if (model == null) {
             return null;
         }
@@ -233,20 +191,7 @@ public class StockFinancialPerformanceMapper {
         document.setVersion(model.getVersion());
         document.setAudit(model.getAudit());
         document.setSource(model.getSource());
-        document.setGrowthMetrics(model.getGrowthMetrics());
-        document.setFinancialRatios(model.getFinancialRatios());
-        document.setDividendMetrics(model.getDividendMetrics());
-        document.setAssetTurnoverRatio(model.getAssetTurnoverRatio());
-        document.setWorkingCapitalDays(model.getWorkingCapitalDays());
-        document.setInventoryTurnoverRatio(model.getInventoryTurnoverRatio());
-        document.setAdjEarningsPerShare(model.getAdjEarningsPerShare());
-        document.setEnterpriseValue(model.getEnterpriseValue());
-        document.setPegRatio(model.getPegRatio());
-        document.setPriceSalesRatio(model.getPriceSalesRatio());
-        document.setAdjDividendPerShare(model.getAdjDividendPerShare());
-        document.setFreeCashFlowPerShare(model.getFreeCashFlowPerShare());
-        document.setCashConversionCycle(model.getCashConversionCycle());
-        document.setFreeCashFlowYield(model.getFreeCashFlowYield());
+        document.setFactSheetDividend(model.getFactSheetDividend());
         
         return document;
     }
@@ -274,6 +219,38 @@ public class StockFinancialPerformanceMapper {
         }
         
         QuaterlyFinancialResultDocument document = new QuaterlyFinancialResultDocument();
+        document.setId(UUID.randomUUID().toString());
+        document.setSymbol(model.getSymbol());
+        document.setVersion(model.getVersion());
+        document.setAudit(model.getAudit());
+        document.setSource(model.getSource());
+        document.setFinancialResults(model.getFinancialResults());
+        
+        return document;
+    }
+
+    public StockFinancialResult toModel(FinancialResultDocument document) {
+        if (document == null) {
+            return null;
+        }
+        
+        StockFinancialResult model = new StockFinancialResult();
+        model.setId(document.getId());
+        model.setSymbol(document.getSymbol());
+        model.setVersion(document.getVersion());
+        model.setAudit(document.getAudit());
+        model.setSource(document.getSource());
+        model.setFinancialResults(document.getFinancialResults());
+        
+        return model;
+    }
+    
+    public FinancialResultDocument toDocument(StockFinancialResult model) {
+        if (model == null) {
+            return null;
+        }
+        
+        FinancialResultDocument document = new FinancialResultDocument();
         document.setId(UUID.randomUUID().toString());
         document.setSymbol(model.getSymbol());
         document.setVersion(model.getVersion());

@@ -1,10 +1,10 @@
 package com.am.common.investment.persistence.document.stock.financial.factsheetdividend;
 
+import java.util.List;
+
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import com.am.common.investment.model.equity.metrics.DividendMetrics;
-import com.am.common.investment.model.equity.metrics.FinancialRatios;
-import com.am.common.investment.model.equity.metrics.GrowthMetrics;
+import com.am.common.investment.model.equity.financial.factsheetdividend.FactSheetDividend;
 import com.am.common.investment.persistence.document.BaseDocument;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -22,26 +22,5 @@ import lombok.experimental.SuperBuilder;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Document(collection = "fact_sheet_dividend")
 public class FactSheetDividendDocument extends BaseDocument{
-    
-   // Growth Metrics
-    private GrowthMetrics growthMetrics;
-    
-    // Financial Ratios
-    private FinancialRatios financialRatios;
-    
-    // Dividend Metrics
-    private DividendMetrics dividendMetrics;
-    
-    // Additional Metrics
-    private Double assetTurnoverRatio;
-    private Double workingCapitalDays;
-    private Double inventoryTurnoverRatio;
-    private Double adjEarningsPerShare;
-    private Double enterpriseValue;
-    private Double pegRatio;
-    private Double priceSalesRatio;
-    private Double adjDividendPerShare;
-    private Double freeCashFlowPerShare;
-    private Double cashConversionCycle;
-    private Double freeCashFlowYield;
+    private List<FactSheetDividend> factSheetDividend;
 }
