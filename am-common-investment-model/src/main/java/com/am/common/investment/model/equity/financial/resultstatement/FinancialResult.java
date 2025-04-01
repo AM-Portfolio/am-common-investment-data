@@ -1,6 +1,5 @@
 package com.am.common.investment.model.equity.financial.resultstatement;
 
-import com.am.common.investment.model.equity.financial.BaseModel;
 import com.am.common.investment.model.equity.metrics.CostMetrics;
 import com.am.common.investment.model.equity.metrics.EpsMetrics;
 import com.am.common.investment.model.equity.metrics.GrowthMetrics;
@@ -23,9 +22,9 @@ public class FinancialResult{
     private String quarter;
     
     // Revenue Metrics
-    private double totalRevenue;
-    private double operatingRevenue;
-    private double otherIncome;
+    private Double totalRevenue;
+    private Double operatingRevenue;
+    private Double otherIncome;
     
     // Cost Metrics
     private CostMetrics costMetrics;
@@ -41,12 +40,4 @@ public class FinancialResult{
     
     // Growth Metrics
     private GrowthMetrics growthMetrics;
-    
-    // Additional Metrics
-    private double profitFromAssociates;
-    private double patMargin;
-    private double patGrowth;
-    private double patMarginGrowth;
-    private double adjEpsInRsBasic;
-    private double adjEpsInRsDiluted;
 }
