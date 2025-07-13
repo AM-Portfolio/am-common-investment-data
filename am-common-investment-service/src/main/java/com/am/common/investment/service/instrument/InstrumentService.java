@@ -49,6 +49,14 @@ public interface InstrumentService {
      * @return list of instruments for the exchange
      */
     List<Instrument> getInstrumentsByExchange(String exchange);
+
+    /**
+     * Get an instrument by instrument token
+     * 
+     * @param instrumentToken the instrument token to look up
+     * @return the instrument if found
+     */
+    Optional<Instrument> getInstrumentByInstrumentToken(Long instrumentToken);
     
     /**
      * Delete an instrument by symbol

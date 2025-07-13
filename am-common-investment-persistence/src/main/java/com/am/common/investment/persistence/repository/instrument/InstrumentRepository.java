@@ -22,6 +22,8 @@ public interface InstrumentRepository extends MongoRepository<InstrumentDocument
     
     List<InstrumentDocument> findByInstrumentExchange(String exchange, Sort sort);
     
+    List<InstrumentDocument> findByInstrumentInstrumentToken(Long instrumentToken, Sort sort);
+    
     default Optional<InstrumentDocument> findLatestBySymbol(String symbol) {
         return findBySymbol(symbol, Sort.by(Sort.Order.desc("version"), Sort.Order.desc("audit.updatedAt"))).stream().findFirst();
     }
@@ -32,5 +34,9 @@ public interface InstrumentRepository extends MongoRepository<InstrumentDocument
     
     default Optional<InstrumentDocument> findLatestByIsin(String isin) {
         return findByInstrumentIsin(isin, Sort.by(Sort.Order.desc("version"), Sort.Order.desc("audit.updatedAt"))).stream().findFirst();
+    }
+    
+    default Optional<InstrumentDocument> findLatestByInstrumentToken(Long instrumentToken) {
+        return findByInstrumentInstrumentToken(instrumentToken, Sort.by(Sort.Order.desc("version"), Sort.Order.desc("audit.updatedAt"))).stream().findFirst();
     }
 }

@@ -146,4 +146,10 @@ public class InstrumentServiceImpl implements InstrumentService {
                 String.format("%.2f", savedInstruments.size() * 100.0 / instruments.size()));
         return savedInstruments;
     }
+
+    @Override
+    public Optional<Instrument> getInstrumentByInstrumentToken(Long instrumentToken) {
+        return instrumentRepository.findLatestByInstrumentToken(instrumentToken)
+                .map(InstrumentDocument::getInstrument);
+    }
 }
