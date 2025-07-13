@@ -299,4 +299,39 @@ public class HistoricalDataServiceImpl implements HistoricalDataService {
         // Calculate the total duration
         return toDate.minus(lookbackPeriod * amount, unit);
     }
+
+    @Override
+    public Optional<HistoricalData> saveHistoricalData(HistoricalData historicalData) {
+        if (historicalData == null || historicalData.getDataPoints() == null || historicalData.getDataPoints().isEmpty()) {
+            logger.warn("Cannot save historical data: null or empty data points");
+            return Optional.empty();
+        }
+        
+        logger.info("Saving historical data for symbol: {}, points: {}", 
+                historicalData.getTradingSymbol(), historicalData.getDataPointCount());
+        long startTime = System.currentTimeMillis();
+        
+        try {
+            // Convert OHLCVTPoints to EquityPrice objects
+            List<EquityPrice> equityPrices = OHLCVTMapper.toEquityPrices(
+                historicalData.getDataPoints(),
+                historicalData.getTradingSymbol(),
+                historicalData.getIsin(),
+                historicalData.getExchange(),
+                historicalData.getCurrency()
+            );
+            
+            // Save all prices using the equity service
+            equityService.saveAllPrices(equityPrices);
+            
+            long endTime = System.currentTimeMillis();
+            logger.info("Successfully saved {} data points for symbol: {}, duration: {}ms", 
+                    equityPrices.size(), historicalData.getTradingSymbol(), (endTime - startTime));
+            
+            return Optional.of(historicalData);
+        } catch (Exception e) {
+            logger.error("Error saving historical data for symbol: {}", historicalData.getTradingSymbol(), e);
+            return Optional.empty();
+        }
+    }
 }
