@@ -4,6 +4,7 @@ import com.am.common.investment.model.equity.EquityPrice;
 import com.am.common.investment.model.historical.OHLCVTPoint;
 
 import java.util.List;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
@@ -25,7 +26,7 @@ public class OHLCVTMapper {
         }
         
         return OHLCVTPoint.builder()
-                .time(equityPrice.getTime())
+                .time(equityPrice.getTime().atZone(ZoneOffset.UTC).toLocalDateTime())
                 .open(equityPrice.getOpen())
                 .high(equityPrice.getHigh())
                 .low(equityPrice.getLow())
@@ -48,7 +49,7 @@ public class OHLCVTMapper {
         }
         
         return EquityPrice.builder()
-                .time(ohlcvtPoint.getTime())
+                .time(ohlcvtPoint.getTime().atZone(ZoneOffset.UTC).toInstant())
                 .open(ohlcvtPoint.getOpen())
                 .high(ohlcvtPoint.getHigh())
                 .low(ohlcvtPoint.getLow())
@@ -76,7 +77,7 @@ public class OHLCVTMapper {
         return EquityPrice.builder()
                 .symbol(symbol)
                 .isin(isin)
-                .time(ohlcvtPoint.getTime())
+                .time(ohlcvtPoint.getTime().atZone(ZoneOffset.UTC).toInstant())
                 .open(ohlcvtPoint.getOpen())
                 .high(ohlcvtPoint.getHigh())
                 .low(ohlcvtPoint.getLow())

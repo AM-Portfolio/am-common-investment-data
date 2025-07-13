@@ -6,7 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.Instant;
+import java.time.LocalDateTime;
 
 /**
  * Model class representing a single OHLCVT (Open, High, Low, Close, Volume, Time) data point
@@ -18,7 +18,7 @@ import java.time.Instant;
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class OHLCVTPoint {
-    private Instant time;
+    private LocalDateTime time;
     private Double open;
     private Double high;
     private Double low;
