@@ -29,7 +29,7 @@ public class InstrumentServiceImpl implements InstrumentService {
 
     @Override
     public Instrument saveInstrument(Instrument instrument, String symbol) {
-        log.info("Saving instrument with trading symbol: {}", instrument.getTradingSymbol());
+        //log.info("Saving instrument with trading symbol: {}", instrument.getTradingSymbol());
         
         InstrumentDocument document = instrumentRepository.findLatestBySymbol(symbol)
                 .map(existing -> {
@@ -99,7 +99,7 @@ public class InstrumentServiceImpl implements InstrumentService {
         log.info("Batch saving {} instruments", instruments.size());
         
         List<Instrument> savedInstruments = new ArrayList<>();
-        int batchSize = 100; // Configure batch size
+        int batchSize = 1000; // Configure batch size
         int totalSize = instruments.size();
         int processedCount = 0;
         
