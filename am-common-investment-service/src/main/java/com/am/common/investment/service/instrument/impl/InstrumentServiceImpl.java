@@ -152,4 +152,20 @@ public class InstrumentServiceImpl implements InstrumentService {
         return instrumentRepository.findLatestByInstrumentToken(instrumentToken)
                 .map(InstrumentDocument::getInstrument);
     }
+    
+    @Override
+    public List<Instrument> getInstrumentByTradingsymbols(List<String> tradingSymbols) {
+        log.debug("Getting instruments by multiple trading symbols: {}", tradingSymbols);
+        
+        if (tradingSymbols == null || tradingSymbols.isEmpty()) {
+            log.warn("Empty or null trading symbols list provided");
+            return new ArrayList<>();
+        }
+        
+        return instrumentRepository.findByInstrumentTradingSymbolIn(tradingSymbols, 
+                Sort.by(Sort.Order.desc("version"), Sort.Order.desc("audit.updatedAt")))
+                .stream()
+                .map(InstrumentDocument::getInstrument)
+                .collect(Collectors.toList());
+    }
 }

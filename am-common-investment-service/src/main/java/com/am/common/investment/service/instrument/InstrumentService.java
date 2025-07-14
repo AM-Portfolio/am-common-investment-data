@@ -72,4 +72,12 @@ public interface InstrumentService {
      * @return list of saved instruments
      */
     List<Instrument> saveAll(List<Instrument> instruments);
+    
+    /**
+     * Get instruments by multiple trading symbols
+     * 
+     * @param tradingSymbols the list of trading symbols to look up
+     * @return list of instruments matching the provided trading symbols
+     */
+    List<Instrument> getInstrumentByTradingsymbols(List<String> tradingSymbols);
 }

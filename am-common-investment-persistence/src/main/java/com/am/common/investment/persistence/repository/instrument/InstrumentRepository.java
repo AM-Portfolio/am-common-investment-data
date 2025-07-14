@@ -24,6 +24,8 @@ public interface InstrumentRepository extends MongoRepository<InstrumentDocument
     
     List<InstrumentDocument> findByInstrumentInstrumentToken(Long instrumentToken, Sort sort);
     
+    List<InstrumentDocument> findByInstrumentTradingSymbolIn(List<String> tradingSymbols, Sort sort);
+    
     default Optional<InstrumentDocument> findLatestBySymbol(String symbol) {
         return findBySymbol(symbol, Sort.by(Sort.Order.desc("version"), Sort.Order.desc("audit.updatedAt"))).stream().findFirst();
     }
