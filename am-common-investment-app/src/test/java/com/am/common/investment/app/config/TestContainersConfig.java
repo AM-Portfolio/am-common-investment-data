@@ -4,7 +4,8 @@ import static com.am.common.investment.app.constant.AppConstants.InfluxDB.*;
 
 import com.am.common.investment.persistence.repository.measurement.EquityPriceMeasurementRepository;
 import com.am.common.investment.persistence.repository.measurement.impl.EquityPriceMeasurementRepositoryImpl;
-import com.am.common.investment.persistence.repository.measurement.impl.EquityRangeConfig;
+import com.am.common.investment.persistence.config.EquityRangeConfig;
+import com.am.common.investment.persistence.config.InfluxDBConfig;
 import com.influxdb.client.InfluxDBClient;
 import com.influxdb.client.InfluxDBClientFactory;
 import org.junit.jupiter.api.AfterEach;
@@ -51,6 +52,8 @@ public class TestContainersConfig implements AfterEachCallback {
         System.setProperty("spring.influx.token", ADMIN_TOKEN);
         System.setProperty("spring.influx.org", ORG);
         System.setProperty("spring.influx.bucket", BUCKET);
+        System.setProperty("equityprice-range.default-range", "-24h");
+        System.setProperty("equityprice-range.history-range", "-30d");
     }
 
     @Bean
@@ -78,8 +81,19 @@ public class TestContainersConfig implements AfterEachCallback {
     @Bean
     @Primary
     @ConditionalOnMissingBean
-    public EquityPriceMeasurementRepository equityPriceMeasurementRepository(InfluxDBClient influxDBClient, EquityRangeConfig rangeConfig) {
-        return new EquityPriceMeasurementRepositoryImpl(influxDBClient, rangeConfig);
+    public InfluxDBConfig influxDBConfig() {
+        // Using direct field assignment since we're using Lombok @Data
+        InfluxDBConfig config = new InfluxDBConfig();
+        // The bucket and org fields already have default values
+        // that match our test constants
+        return config;
+    }
+    
+    @Bean
+    @Primary
+    @ConditionalOnMissingBean
+    public EquityPriceMeasurementRepository equityPriceMeasurementRepository(InfluxDBClient influxDBClient, EquityRangeConfig rangeConfig, InfluxDBConfig influxDBConfig) {
+        return new EquityPriceMeasurementRepositoryImpl(influxDBClient, rangeConfig, influxDBConfig);
     }
 
     @DynamicPropertySource
