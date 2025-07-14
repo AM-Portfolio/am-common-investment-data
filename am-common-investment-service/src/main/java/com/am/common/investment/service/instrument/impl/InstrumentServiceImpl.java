@@ -166,6 +166,6 @@ public class InstrumentServiceImpl implements InstrumentService {
                 Sort.by(Sort.Order.desc("version"), Sort.Order.desc("audit.updatedAt")))
                 .stream()
                 .map(InstrumentDocument::getInstrument)
-                .collect(Collectors.toList());
+                .collect(Collectors.toList());  
     }
 }

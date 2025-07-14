@@ -14,6 +14,7 @@ import com.influxdb.query.dsl.functions.restriction.Restrictions;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
 import java.time.Instant;
@@ -26,9 +27,13 @@ import java.util.stream.Collectors;
 @Repository
 @RequiredArgsConstructor
 public class EquityPriceMeasurementRepositoryImpl implements EquityPriceMeasurementRepository {
+
+    @Value("${spring.influx.bucket}")
+    private String bucket;
+    
     private static final Logger logger = LoggerFactory.getLogger(EquityPriceMeasurementRepositoryImpl.class);
     private static final String MEASUREMENT_NAME = "equity";
-    private static final String BUCKET_NAME = "investment_data";
+    private final String BUCKET_NAME = bucket;
     private static final int BATCH_SIZE = 5000;
     private static final int FLUSH_INTERVAL = 1000; // milliseconds
 
