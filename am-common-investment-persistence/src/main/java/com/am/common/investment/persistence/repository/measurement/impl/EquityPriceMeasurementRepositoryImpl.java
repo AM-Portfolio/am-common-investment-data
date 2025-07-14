@@ -282,4 +282,62 @@ public class EquityPriceMeasurementRepositoryImpl implements EquityPriceMeasurem
         logger.debug("Found {} results by ISIN", byIsin.size());
         return byIsin;
     }
+    
+    @Override
+    public List<EquityPriceMeasurement> findByTradingSymbolIn(List<String> tradingSymbols) {
+        if (tradingSymbols == null || tradingSymbols.isEmpty()) {
+            logger.warn("Empty or null trading symbols list provided");
+            return List.of();
+        }
+        
+        String symbolList = tradingSymbols.stream()
+                .map(symbol -> "\"" + symbol + "\"")
+                .collect(Collectors.joining(", "));
+        
+        String query = String.format(
+            "from(bucket: \"%s\") " +
+            "|> range(start: %s) " +
+            "|> filter(fn: (r) => r._measurement == \"equity\") " +
+            "|> filter(fn: (r) => contains(value: r.symbol, set: [%s])) " +
+            "|> pivot(rowKey: [\"_time\"], " +
+            "        columnKey: [\"_field\"], " +
+            "        valueColumn: \"_value\") ",
+            BUCKET_NAME, parseRange(rangeConfig.getDefaultRange()), symbolList
+        );
+
+        logger.debug("Executing findByTradingSymbolIn query for symbols: {}", tradingSymbols);
+        List<EquityPriceMeasurement> results = influxDBClient.getQueryApi().query(query, EquityPriceMeasurement.class);
+        logger.debug("Found {} results for trading symbols", results.size());
+        
+        return results;
+    }
+    
+    @Override
+    public List<EquityPriceMeasurement> findByIsinIn(List<String> isins) {
+        if (isins == null || isins.isEmpty()) {
+            logger.warn("Empty or null ISINs list provided");
+            return List.of();
+        }
+        
+        String isinList = isins.stream()
+                .map(isin -> "\"" + isin + "\"")
+                .collect(Collectors.joining(", "));
+        
+        String query = String.format(
+            "from(bucket: \"%s\") " +
+            "|> range(start: %s) " +
+            "|> filter(fn: (r) => r._measurement == \"equity\") " +
+            "|> filter(fn: (r) => contains(value: r.isin, set: [%s])) " +
+            "|> pivot(rowKey: [\"_time\"], " +
+            "        columnKey: [\"_field\"], " +
+            "        valueColumn: \"_value\") ",
+            BUCKET_NAME, parseRange(rangeConfig.getDefaultRange()), isinList
+        );
+
+        logger.debug("Executing findByIsinIn query for ISINs: {}", isins);
+        List<EquityPriceMeasurement> results = influxDBClient.getQueryApi().query(query, EquityPriceMeasurement.class);
+        logger.debug("Found {} results for ISINs", results.size());
+        
+        return results;
+    }
 }
