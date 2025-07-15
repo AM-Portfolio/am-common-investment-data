@@ -178,7 +178,7 @@ public class InstrumentServiceImpl implements InstrumentService {
             return new ArrayList<>();
         }
         
-        return instrumentRepository.findByInstrumentTokenIn(instrumentTokens, 
+        return instrumentRepository.findByInstrumentInstrumentTokenIn(instrumentTokens, 
                 Sort.by(Sort.Order.desc("version"), Sort.Order.desc("audit.updatedAt")))
                 .stream()
                 .map(InstrumentDocument::getInstrument)
