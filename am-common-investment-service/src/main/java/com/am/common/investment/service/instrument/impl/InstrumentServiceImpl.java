@@ -168,4 +168,20 @@ public class InstrumentServiceImpl implements InstrumentService {
                 .map(InstrumentDocument::getInstrument)
                 .collect(Collectors.toList());  
     }
+
+    @Override
+    public List<Instrument> getInstrumentByInstrumentTokens(List<Long> instrumentTokens) {
+        log.debug("Getting instruments by multiple instrument tokens: {}", instrumentTokens);
+        
+        if (instrumentTokens == null || instrumentTokens.isEmpty()) {
+            log.warn("Empty or null instrument tokens list provided");
+            return new ArrayList<>();
+        }
+        
+        return instrumentRepository.findByInstrumentTokenIn(instrumentTokens, 
+                Sort.by(Sort.Order.desc("version"), Sort.Order.desc("audit.updatedAt")))
+                .stream()
+                .map(InstrumentDocument::getInstrument)
+                .collect(Collectors.toList());  
+    }
 }
