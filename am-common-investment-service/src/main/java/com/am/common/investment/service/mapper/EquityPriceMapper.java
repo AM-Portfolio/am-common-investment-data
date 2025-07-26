@@ -5,7 +5,7 @@ import com.am.common.investment.persistence.influx.measurement.EquityPriceMeasur
 import org.springframework.stereotype.Component;
 
 @Component
-public class EquityMapper {
+public class EquityPriceMapper {
     
     public EquityPrice toModel(EquityPriceMeasurement measurement) {
         if (measurement == null) {

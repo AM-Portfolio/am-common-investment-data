@@ -4,7 +4,7 @@ import com.am.common.investment.model.equity.EquityPrice;
 import com.am.common.investment.persistence.influx.measurement.EquityPriceMeasurement;
 import com.am.common.investment.persistence.repository.measurement.EquityPriceMeasurementRepository;
 import com.am.common.investment.service.EquityService;
-import com.am.common.investment.service.mapper.EquityMapper;
+import com.am.common.investment.service.mapper.EquityPriceMapper;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,7 +20,7 @@ public class EquityServiceImpl implements EquityService {
     private static final Logger logger = LoggerFactory.getLogger(EquityServiceImpl.class);
 
     private final EquityPriceMeasurementRepository priceRepository;
-    private final EquityMapper mapper;
+    private final EquityPriceMapper mapper;
 
     @Override
     public void savePrice(EquityPrice price) {
