@@ -1,4 +1,4 @@
-package com.am.common.investment.app.config;
+package com.am.common.investment.persistence.config;
 
 import com.influxdb.client.InfluxDBClient;
 import com.influxdb.client.InfluxDBClientFactory;
@@ -24,5 +24,13 @@ public class InfluxDBConfig {
     @Bean
     public InfluxDBClient influxDBClient() {
         return InfluxDBClientFactory.create(url, token.toCharArray(), org, bucket);
+    }
+    
+    public String getBucket() {
+        return bucket;
+    }
+    
+    public String getOrg() {
+        return org;
     }
 }

@@ -15,4 +15,6 @@ public interface EquityService {
     Optional<EquityPrice> getLatestPriceByKey(String key);
     List<EquityPrice> getPriceHistoryByKey(String key, Instant startTime, Instant endTime);
     List<EquityPrice> getPricesByExchange(String exchange);
+    List<EquityPrice> getPricesByTradingSymbols(List<String> tradingSymbols);
+    List<EquityPrice> getPricesByIsin(List<String> isins);
 }

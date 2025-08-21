@@ -4,7 +4,7 @@ import com.am.common.investment.model.equity.EquityPrice;
 import com.am.common.investment.persistence.influx.measurement.EquityPriceMeasurement;
 import com.am.common.investment.persistence.repository.measurement.EquityPriceMeasurementRepository;
 import com.am.common.investment.service.EquityService;
-import com.am.common.investment.service.mapper.EquityMapper;
+import com.am.common.investment.service.mapper.EquityPriceMapper;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,7 +20,7 @@ public class EquityServiceImpl implements EquityService {
     private static final Logger logger = LoggerFactory.getLogger(EquityServiceImpl.class);
 
     private final EquityPriceMeasurementRepository priceRepository;
-    private final EquityMapper mapper;
+    private final EquityPriceMapper mapper;
 
     @Override
     public void savePrice(EquityPrice price) {
@@ -154,6 +154,115 @@ public class EquityServiceImpl implements EquityService {
             }
         } else {
             logger.debug("No prices found for exchange: {}", exchange);
+        }
+        
+        logger.debug("Query completed in {}ms", (queryEndTime - queryStartTime));
+        return prices;
+    }
+    
+    @Override
+    public List<EquityPrice> getPricesByTradingSymbols(List<String> tradingSymbols) {
+        if (tradingSymbols == null || tradingSymbols.isEmpty()) {
+            logger.warn("Empty or null trading symbols list provided");
+            return new ArrayList<>();
+        }
+        
+        logger.debug("Fetching prices for {} trading symbols", tradingSymbols.size());
+        long queryStartTime = System.currentTimeMillis();
+        
+        List<EquityPrice> prices = priceRepository.findByTradingSymbolIn(tradingSymbols)
+            .stream()
+            .map(mapper::toModel)
+            .collect(Collectors.toList());
+        
+        long queryEndTime = System.currentTimeMillis();
+        if (!prices.isEmpty()) {
+            // Group prices by symbol for logging
+            Map<String, List<EquityPrice>> pricesBySymbol = prices.stream()
+                .collect(Collectors.groupingBy(EquityPrice::getSymbol));
+            
+            logger.debug("Found {} total prices for {} out of {} requested trading symbols", 
+                prices.size(), pricesBySymbol.size(), tradingSymbols.size());
+            
+            // Log details for each symbol
+            pricesBySymbol.forEach((symbol, symbolPrices) -> {
+                EquityPrice latestPrice = symbolPrices.stream()
+                    .max(Comparator.comparing(EquityPrice::getTime))
+                    .orElse(null);
+                
+                if (latestPrice != null) {
+                    logger.debug("Symbol: {} - Latest price: {} at {}, Total records: {}", 
+                        symbol, latestPrice.getClose(), latestPrice.getTime(), symbolPrices.size());
+                }
+            });
+            
+            // Log missing symbols
+            List<String> foundSymbols = new ArrayList<>(pricesBySymbol.keySet());
+            List<String> missingSymbols = tradingSymbols.stream()
+                .filter(symbol -> !foundSymbols.contains(symbol))
+                .collect(Collectors.toList());
+            
+            if (!missingSymbols.isEmpty()) {
+                logger.warn("No prices found for {} trading symbols: {}", 
+                    missingSymbols.size(), String.join(", ", missingSymbols));
+            }
+        } else {
+            logger.warn("No prices found for any of the requested trading symbols");
+        }
+        
+        logger.debug("Query completed in {}ms", (queryEndTime - queryStartTime));
+        return prices;
+    }
+    
+    @Override
+    public List<EquityPrice> getPricesByIsin(List<String> isins) {
+        if (isins == null || isins.isEmpty()) {
+            logger.warn("Empty or null ISINs list provided");
+            return new ArrayList<>();
+        }
+        
+        logger.debug("Fetching prices for {} ISINs", isins.size());
+        long queryStartTime = System.currentTimeMillis();
+        
+        List<EquityPrice> prices = priceRepository.findByIsinIn(isins)
+            .stream()
+            .map(mapper::toModel)
+            .collect(Collectors.toList());
+        
+        long queryEndTime = System.currentTimeMillis();
+        if (!prices.isEmpty()) {
+            // Group prices by ISIN for logging
+            Map<String, List<EquityPrice>> pricesByIsin = prices.stream()
+                .collect(Collectors.groupingBy(EquityPrice::getIsin));
+            
+            logger.debug("Found {} total prices for {} out of {} requested ISINs", 
+                prices.size(), pricesByIsin.size(), isins.size());
+            
+            // Log details for each ISIN
+            pricesByIsin.forEach((isin, isinPrices) -> {
+                EquityPrice latestPrice = isinPrices.stream()
+                    .max(Comparator.comparing(EquityPrice::getTime))
+                    .orElse(null);
+                
+                if (latestPrice != null) {
+                    logger.debug("ISIN: {} - Symbol: {} - Latest price: {} at {}, Total records: {}", 
+                        isin, latestPrice.getSymbol(), latestPrice.getClose(), 
+                        latestPrice.getTime(), isinPrices.size());
+                }
+            });
+            
+            // Log missing ISINs
+            List<String> foundIsins = new ArrayList<>(pricesByIsin.keySet());
+            List<String> missingIsins = isins.stream()
+                .filter(isin -> !foundIsins.contains(isin))
+                .collect(Collectors.toList());
+            
+            if (!missingIsins.isEmpty()) {
+                logger.warn("No prices found for {} ISINs: {}", 
+                    missingIsins.size(), String.join(", ", missingIsins));
+            }
+        } else {
+            logger.warn("No prices found for any of the requested ISINs");
         }
         
         logger.debug("Query completed in {}ms", (queryEndTime - queryStartTime));

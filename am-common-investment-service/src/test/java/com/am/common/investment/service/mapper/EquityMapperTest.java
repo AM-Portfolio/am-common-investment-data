@@ -11,11 +11,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class EquityMapperTest {
 
-    private EquityMapper mapper;
+    private EquityPriceMapper mapper;
 
     @BeforeEach
     void setUp() {
-        mapper = new EquityMapper();
+        mapper = new EquityPriceMapper();
     }
 
     @Test

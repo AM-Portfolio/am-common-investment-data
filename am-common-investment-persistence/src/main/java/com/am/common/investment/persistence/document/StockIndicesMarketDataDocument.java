@@ -31,7 +31,7 @@ import java.util.UUID;
 public class StockIndicesMarketDataDocument {
     
     @Id
-    private UUID id;
+    private String id;
     private String indexSymbol;
     private List<StockData> data;
     private IndexMetadata metadata;

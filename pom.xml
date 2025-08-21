@@ -6,7 +6,7 @@
 
     <groupId>com.am.common</groupId>
     <artifactId>am-common-investment-data-parent</artifactId>
-    <version>1.6.2-SNAPSHOT</version>
+    <version>1.6.22-SNAPSHOT</version>
     <packaging>pom</packaging>
 
          
@@ -23,6 +23,7 @@
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <spring-boot.version>3.1.0</spring-boot.version>
+        <spring-data.version>3.1.0</spring-data.version>
         <mapstruct.version>1.5.3.Final</mapstruct.version>
         <lombok.version>1.18.30</lombok.version>
         <jakarta.persistence.version>3.1.0</jakarta.persistence.version>
@@ -52,7 +53,6 @@
                 <artifactId>spring-boot-starter-validation</artifactId>
                 <version>${spring-boot.version}</version>
             </dependency>
-
             <!-- MapStruct -->
             <dependency>
                 <groupId>org.mapstruct</groupId>

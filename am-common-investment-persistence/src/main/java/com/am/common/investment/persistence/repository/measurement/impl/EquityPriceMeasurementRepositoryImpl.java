@@ -2,6 +2,7 @@ package com.am.common.investment.persistence.repository.measurement.impl;
 
 import com.am.common.investment.persistence.influx.measurement.EquityPriceMeasurement;
 import com.am.common.investment.persistence.repository.measurement.EquityPriceMeasurementRepository;
+import com.am.common.investment.persistence.config.EquityRangeConfig;
 import com.influxdb.client.InfluxDBClient;
 import com.influxdb.client.QueryApi;
 import com.influxdb.client.WriteApi;
@@ -16,6 +17,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
+import com.am.common.investment.persistence.config.InfluxDBConfig;
+
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
@@ -26,14 +29,15 @@ import java.util.stream.Collectors;
 @Repository
 @RequiredArgsConstructor
 public class EquityPriceMeasurementRepositoryImpl implements EquityPriceMeasurementRepository {
+
     private static final Logger logger = LoggerFactory.getLogger(EquityPriceMeasurementRepositoryImpl.class);
     private static final String MEASUREMENT_NAME = "equity";
-    private static final String BUCKET_NAME = "investment_data";
     private static final int BATCH_SIZE = 5000;
     private static final int FLUSH_INTERVAL = 1000; // milliseconds
-
+    
     private final InfluxDBClient influxDBClient;
     private final EquityRangeConfig rangeConfig;
+    private final InfluxDBConfig influxDBConfig;
 
     private Instant parseRange(String range) {
         String value = range.substring(1, range.length() - 1);
@@ -75,7 +79,7 @@ public class EquityPriceMeasurementRepositoryImpl implements EquityPriceMeasurem
                 ", currency=" + measurement.getCurrency());
             System.out.println("  - Time: " + measurement.getTime());
             
-            writeApi.writePoint(BUCKET_NAME, "org", point);
+            writeApi.writePoints(influxDBConfig.getBucket(), influxDBConfig.getOrg(), List.of(point));
             writeApi.flush();
         }
     }
@@ -133,8 +137,8 @@ public class EquityPriceMeasurementRepositoryImpl implements EquityPriceMeasurem
             "|> pivot(rowKey: [\"_time\"], " +
             "        columnKey: [\"_field\"], " +
             "        valueColumn: \"_value\") ",
-            BUCKET_NAME, parseRange(rangeConfig.getDefaultRange()), isin
-        );
+            influxDBConfig.getBucket(), parseRange(rangeConfig.getDefaultRange()), isin
+        );  
 
         logger.debug("Executing findLatestByIsin query for isin: {}", isin);
         QueryApi queryApi = influxDBClient.getQueryApi();
@@ -163,7 +167,7 @@ public class EquityPriceMeasurementRepositoryImpl implements EquityPriceMeasurem
             "|> pivot(rowKey: [\"_time\"], " +
             "        columnKey: [\"_field\"], " +
             "        valueColumn: \"_value\") ",
-            BUCKET_NAME, parseRange(rangeConfig.getDefaultRange()), symbol
+            influxDBConfig.getBucket(), parseRange(rangeConfig.getDefaultRange()), symbol
         );
 
         logger.debug("Executing findLatestBySymbol query for symbol: {}", symbol);
@@ -176,12 +180,14 @@ public class EquityPriceMeasurementRepositoryImpl implements EquityPriceMeasurem
             measurement.setSymbol(symbol);
             return Optional.of(measurement);
         }
+
+        
         return Optional.empty();
     }
 
     @Override
     public List<EquityPriceMeasurement> findBySymbol(String symbol) {
-        String query = Flux.from(BUCKET_NAME)
+        String query = Flux.from(influxDBConfig.getBucket())
             .range(parseRange(rangeConfig.getHistoryRange()))
             .filter(Restrictions.column("symbol").equal(symbol))
             .toString();
@@ -200,7 +206,7 @@ public class EquityPriceMeasurementRepositoryImpl implements EquityPriceMeasurem
             "|> pivot(rowKey: [\"_time\"], " +
             "        columnKey: [\"_field\"], " +
             "        valueColumn: \"_value\") ",
-            BUCKET_NAME, startTime, endTime, symbol
+            influxDBConfig.getBucket(), startTime, endTime, symbol
         );
 
         logger.debug("Executing findBySymbolAndTimeBetween query for symbol: {}, start: {}, end: {}", 
@@ -214,7 +220,7 @@ public class EquityPriceMeasurementRepositoryImpl implements EquityPriceMeasurem
 
     @Override
     public List<EquityPriceMeasurement> findByIsin(String isin) {
-        String query = Flux.from(BUCKET_NAME)
+        String query = Flux.from(influxDBConfig.getBucket())
             .range(parseRange(rangeConfig.getHistoryRange()))
             .filter(Restrictions.column("isin").equal(isin))
             .toString();
@@ -233,7 +239,7 @@ public class EquityPriceMeasurementRepositoryImpl implements EquityPriceMeasurem
             "|> pivot(rowKey: [\"_time\"], " +
             "        columnKey: [\"_field\"], " +
             "        valueColumn: \"_value\") ",
-            BUCKET_NAME, startTime, endTime, isin
+            influxDBConfig.getBucket(), startTime, endTime, isin
         );
 
         logger.debug("Executing findByIsinAndTimeBetween query for isin: {}, start: {}, end: {}", 
@@ -255,7 +261,7 @@ public class EquityPriceMeasurementRepositoryImpl implements EquityPriceMeasurem
             "|> pivot(rowKey: [\"_time\"], " +
             "        columnKey: [\"_field\"], " +
             "        valueColumn: \"_value\") ",
-            BUCKET_NAME, parseRange(rangeConfig.getDefaultRange()), exchange
+            influxDBConfig.getBucket(), parseRange(rangeConfig.getDefaultRange()), exchange
         );
 
         logger.debug("Executing findByExchange query for exchange: {}", exchange);
@@ -281,5 +287,63 @@ public class EquityPriceMeasurementRepositoryImpl implements EquityPriceMeasurem
         List<EquityPriceMeasurement> byIsin = findByIsinAndTimeBetween(key, startTime, endTime);
         logger.debug("Found {} results by ISIN", byIsin.size());
         return byIsin;
+    }
+    
+    @Override
+    public List<EquityPriceMeasurement> findByTradingSymbolIn(List<String> tradingSymbols) {
+        if (tradingSymbols == null || tradingSymbols.isEmpty()) {
+            logger.warn("Empty or null trading symbols list provided");
+            return List.of();
+        }
+        
+        String symbolList = tradingSymbols.stream()
+                .map(symbol -> "\"" + symbol + "\"")
+                .collect(Collectors.joining(", "));
+        
+        String query = String.format(
+            "from(bucket: \"%s\") " +
+            "|> range(start: %s) " +
+            "|> filter(fn: (r) => r._measurement == \"equity\") " +
+            "|> filter(fn: (r) => contains(value: r.symbol, set: [%s])) " +
+            "|> pivot(rowKey: [\"_time\"], " +
+            "        columnKey: [\"_field\"], " +
+            "        valueColumn: \"_value\") ",
+            influxDBConfig.getBucket(), parseRange(rangeConfig.getDefaultRange()), symbolList
+        );
+
+        logger.debug("Executing findByTradingSymbolIn query for symbols: {}", tradingSymbols);
+        List<EquityPriceMeasurement> results = influxDBClient.getQueryApi().query(query, EquityPriceMeasurement.class);
+        logger.debug("Found {} results for trading symbols", results.size());
+        
+        return results;
+    }
+    
+    @Override
+    public List<EquityPriceMeasurement> findByIsinIn(List<String> isins) {
+        if (isins == null || isins.isEmpty()) {
+            logger.warn("Empty or null ISINs list provided");
+            return List.of();
+        }
+        
+        String isinList = isins.stream()
+                .map(isin -> "\"" + isin + "\"")
+                .collect(Collectors.joining(", "));
+        
+        String query = String.format(
+            "from(bucket: \"%s\") " +
+            "|> range(start: %s) " +
+            "|> filter(fn: (r) => r._measurement == \"equity\") " +
+            "|> filter(fn: (r) => contains(value: r.isin, set: [%s])) " +
+            "|> pivot(rowKey: [\"_time\"], " +
+            "        columnKey: [\"_field\"], " +
+            "        valueColumn: \"_value\") ",
+            influxDBConfig.getBucket(), parseRange(rangeConfig.getDefaultRange()), isinList
+        );
+
+        logger.debug("Executing findByIsinIn query for ISINs: {}", isins);
+        List<EquityPriceMeasurement> results = influxDBClient.getQueryApi().query(query, EquityPriceMeasurement.class);
+        logger.debug("Found {} results for ISINs", results.size());
+        
+        return results;
     }
 }
