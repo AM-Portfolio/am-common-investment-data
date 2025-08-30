@@ -8,7 +8,6 @@ import com.am.common.investment.model.stockindice.AuditData;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.Optional;
 
@@ -28,7 +27,6 @@ public class StockIndicesEventDataMapper {
                 .build();
                 
         return StockIndicesMarketData.builder()
-                .id(UUID.randomUUID().toString())
                 .indexSymbol(eventData.getName())
                 .data(Optional.ofNullable(eventData.getData())
                         .orElse(List.of())

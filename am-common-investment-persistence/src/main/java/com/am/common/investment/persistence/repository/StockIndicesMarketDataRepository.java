@@ -1,13 +1,11 @@
 package com.am.common.investment.persistence.repository;
 
 import com.am.common.investment.persistence.document.StockIndicesMarketDataDocument;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Set;
-import java.util.UUID;
 
 /**
  * MongoDB repository for stock indices market data
@@ -16,10 +14,18 @@ import java.util.UUID;
 public interface StockIndicesMarketDataRepository extends MongoRepository<StockIndicesMarketDataDocument, String> {
     
     /**
-     * Find stock indices market data by multiple index symbols with sorting
+     * Find stock indices market data documents by index symbols
      * 
      * @param indexSymbols Set of index symbols to search for
-     * @return Page of matching documents sorted by updatedAt in descending order
+     * @return List of matching documents
      */
-    Page<StockIndicesMarketDataDocument> findByIndexSymbolInOrderByAuditUpdatedAtDesc(Set<String> indexSymbols, Pageable pageable);
+    List<StockIndicesMarketDataDocument> findByIndexSymbolIn(Set<String> indexSymbols);
+    
+    /**
+     * Find stock indices market data document by index symbol
+     * 
+     * @param indexSymbol Index symbol to search for
+     * @return Matching document or null if not found
+     */
+    StockIndicesMarketDataDocument findByIndexSymbol(String indexSymbol);
 }

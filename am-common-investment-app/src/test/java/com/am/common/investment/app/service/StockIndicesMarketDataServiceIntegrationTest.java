@@ -2,7 +2,6 @@ package com.am.common.investment.app.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.am.common.investment.app.AmCommonInvestmentApplication;
 import com.am.common.investment.app.config.MongoTestConfig;
@@ -12,7 +11,6 @@ import com.am.common.investment.model.events.mapper.StockIndicesEventDataMapper;
 import com.am.common.investment.model.stockindice.StockIndicesMarketData;
 import com.am.common.investment.service.StockIndicesMarketDataService;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +23,6 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Set;
-import java.util.UUID;
 
 @SpringBootTest(classes = {
     AmCommonInvestmentApplication.class,
@@ -59,13 +56,12 @@ public class StockIndicesMarketDataServiceIntegrationTest {
 
         // Then
         assertNotNull(savedData);
-        assertNotNull(savedData.getId());
         assertEquals("NIFTY 50", savedData.getIndexSymbol());
 
         // Verify retrieval by index symbol
         StockIndicesMarketData retrievedData = marketDataService.findByIndexSymbol("NIFTY 50");
         assertNotNull(retrievedData);
-        assertEquals(savedData.getId(), retrievedData.getId());
+        assertEquals(savedData.getIndexSymbol(), retrievedData.getIndexSymbol());
         assertEquals(savedData.getMetadata().getLast(), retrievedData.getMetadata().getLast(), 0.01);
     }
 
@@ -73,6 +69,8 @@ public class StockIndicesMarketDataServiceIntegrationTest {
     void shouldRetrieveMultipleIndices() {
         // Given
         StockIndicesMarketData marketData = StockIndicesEventDataMapper.toMarketData(eventData);
+        marketDataService.save(marketData);
+        marketDataService.save(marketData);
         marketDataService.save(marketData);
 
         // When

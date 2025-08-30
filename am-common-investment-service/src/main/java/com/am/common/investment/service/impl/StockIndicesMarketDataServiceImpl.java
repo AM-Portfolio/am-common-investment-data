@@ -10,16 +10,11 @@ import com.am.common.investment.service.mapper.StockIndicesMarketDataMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 /**
@@ -32,8 +27,6 @@ public class StockIndicesMarketDataServiceImpl implements StockIndicesMarketData
 
     private final StockIndicesMarketDataRepository repository;
     private final StockIndicesMarketDataMapper mapper;
-
-    private static final int DEFAULT_PAGE_SIZE = 1;
 
     @Override
     public StockIndicesMarketData save(StockIndicesMarketData marketData) {
@@ -58,11 +51,10 @@ public class StockIndicesMarketDataServiceImpl implements StockIndicesMarketData
     public StockIndicesMarketData findByIndexSymbol(String symbol) {
         log.debug("Finding stock indices market data for symbol: {}", symbol);
         
-        Pageable pageable = PageRequest.of(0, DEFAULT_PAGE_SIZE, Sort.by(Sort.Direction.DESC, "audit.updatedAt"));
-        Page<StockIndicesMarketDataDocument> page = repository.findByIndexSymbolInOrderByAuditUpdatedAtDesc(Set.of(symbol), pageable);
+        StockIndicesMarketDataDocument document = repository.findByIndexSymbol(symbol);
         
-        if (page.hasContent()) {
-            return mapper.toModel(page.getContent().get(0));
+        if (document != null) {
+            return mapper.toModel(document);
         }
         return null;
     }
@@ -71,10 +63,9 @@ public class StockIndicesMarketDataServiceImpl implements StockIndicesMarketData
     public List<StockIndicesMarketData> findByIndexSymbols(Set<String> symbols) {
         log.debug("Finding stock indices market data for symbols: {}", symbols);
         
-        Pageable pageable = PageRequest.of(0, DEFAULT_PAGE_SIZE * symbols.size(), Sort.by(Sort.Direction.DESC, "audit.updatedAt"));
-        Page<StockIndicesMarketDataDocument> page = repository.findByIndexSymbolInOrderByAuditUpdatedAtDesc(symbols, pageable);
+        List<StockIndicesMarketDataDocument> documents = repository.findByIndexSymbolIn(symbols);
         
-        return page.getContent().stream()
+        return documents.stream()
             .map(mapper::toModel)
             .collect(Collectors.toList());
     }

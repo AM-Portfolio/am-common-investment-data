@@ -6,7 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
-import java.util.UUID;
 
 import com.am.common.investment.model.events.StockInsidicesEventData.IndexMetadata;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -22,7 +21,6 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class StockIndicesMarketData {
-    private String id;
     private String indexSymbol;
     private List<StockData> data;
     private IndexMetadata metadata;
