@@ -19,7 +19,6 @@ import java.time.LocalDateTime;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class OHLCVTPoint {
     private LocalDateTime time;
-    private Double lastPrice;
     private Double open;
     private Double high;
     private Double low;

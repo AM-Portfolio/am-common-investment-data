@@ -18,6 +18,7 @@ public class EquityPrice {
     private String symbol;
     private String isin;
     private Instant time;
+    private Double lastPrice;
     private Double open;
     private Double high;
     private Double low;
