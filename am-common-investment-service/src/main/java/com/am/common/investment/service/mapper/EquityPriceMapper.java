@@ -17,6 +17,7 @@ public class EquityPriceMapper {
         model.setSymbol(measurement.getSymbol());
         model.setIsin(measurement.getIsin());
         model.setTime(measurement.getTime());
+        model.setLastPrice(measurement.getLast());
         model.setOhlcv(OHLCVTPoint.builder()
         .open(measurement.getOpen())
         .close(measurement.getClose())
@@ -38,6 +39,7 @@ public class EquityPriceMapper {
         measurement.setSymbol(model.getSymbol());
         measurement.setIsin(model.getIsin());
         measurement.setTime(model.getTime());
+        measurement.setLast(model.getLastPrice());
         measurement.setOpen(model.getOhlcv().getOpen());
         measurement.setHigh(model.getOhlcv().getHigh());
         measurement.setLow(model.getOhlcv().getLow());

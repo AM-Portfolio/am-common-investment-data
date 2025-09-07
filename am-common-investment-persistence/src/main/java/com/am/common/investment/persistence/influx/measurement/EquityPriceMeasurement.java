@@ -24,9 +24,12 @@ public class EquityPriceMeasurement {
 
     @Column(tag = true, name = "exchange")
     private String exchange;
-    
+
     @Column(name = "open")
     private Double open;
+    
+    @Column(name = "last")
+    private Double last;
     
     @Column(name = "high")
     private Double high;
