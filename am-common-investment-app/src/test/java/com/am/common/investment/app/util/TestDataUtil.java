@@ -1,6 +1,7 @@
 package com.am.common.investment.app.util;
 
 import com.am.common.investment.model.equity.EquityPrice;
+import com.am.common.investment.model.historical.OHLCVTPoint;
 import com.am.common.investment.model.stockindice.AuditData;
 import com.am.common.investment.persistence.influx.measurement.EquityPriceMeasurement;
 import java.time.Instant;
@@ -35,11 +36,13 @@ public class TestDataUtil {
         return EquityPrice.builder()
             .symbol(symbol)
             .isin(isin)
+            .ohlcv(OHLCVTPoint.builder()
             .open(open)
             .high(high)
             .low(low)
             .close(close)
             .volume(volume)
+            .build())
             .exchange(exchange)
             .currency(currency)
             .time(time)

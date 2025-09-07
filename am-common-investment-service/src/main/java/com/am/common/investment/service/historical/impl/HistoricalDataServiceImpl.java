@@ -147,21 +147,21 @@ public class HistoricalDataServiceImpl implements HistoricalDataService {
         EquityPrice reference = prices.get(0);
         
         // Find OHLC values
-        double open = reference.getOpen();
-        double close = prices.get(prices.size() - 1).getClose();
+        double open = reference.getOhlcv().getOpen();
+        double close = prices.get(prices.size() - 1).getOhlcv().getClose();
         
         double high = prices.stream()
-                .mapToDouble(EquityPrice::getHigh)
+                .mapToDouble(p -> p.getOhlcv().getHigh())
                 .max()
                 .orElse(0.0);
                 
         double low = prices.stream()
-                .mapToDouble(EquityPrice::getLow)
+                .mapToDouble(p -> p.getOhlcv().getLow())
                 .min()
                 .orElse(0.0);
                 
         long volume = prices.stream()
-                .mapToLong(p -> p.getVolume() != null ? p.getVolume() : 0L)
+                .mapToLong(p -> p.getOhlcv().getVolume() != null ? p.getOhlcv().getVolume() : 0L)
                 .sum();
         
         // Create the aggregated price
@@ -171,11 +171,13 @@ public class HistoricalDataServiceImpl implements HistoricalDataService {
                 .exchange(reference.getExchange())
                 .currency(reference.getCurrency())
                 .time(bucketTime)
-                .open(open)
-                .high(high)
-                .low(low)
-                .close(close)
-                .volume(volume)
+                .ohlcv(OHLCVTPoint.builder()
+                        .open(open)
+                        .high(high)
+                        .low(low)
+                        .close(close)
+                        .volume(volume)
+                        .build())
                 .build();
     }
     

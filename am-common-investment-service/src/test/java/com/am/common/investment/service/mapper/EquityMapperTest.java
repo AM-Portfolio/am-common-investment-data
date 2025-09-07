@@ -1,6 +1,7 @@
 package com.am.common.investment.service.mapper;
 
 import com.am.common.investment.model.equity.EquityPrice;
+import com.am.common.investment.model.historical.OHLCVTPoint;
 import com.am.common.investment.persistence.influx.measurement.EquityPriceMeasurement;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -42,11 +43,11 @@ class EquityMapperTest {
         assertThat(model.getSymbol()).isEqualTo("AAPL");
         assertThat(model.getIsin()).isEqualTo("US0378331005");
         assertThat(model.getTime()).isEqualTo(now);
-        assertThat(model.getOpen()).isEqualTo(150.0);
-        assertThat(model.getHigh()).isEqualTo(155.0);
-        assertThat(model.getLow()).isEqualTo(149.0);
-        assertThat(model.getClose()).isEqualTo(152.0);
-        assertThat(model.getVolume()).isEqualTo(1000000L);
+        assertThat(model.getOhlcv().getOpen()).isEqualTo(150.0);
+        assertThat(model.getOhlcv().getHigh()).isEqualTo(155.0);
+        assertThat(model.getOhlcv().getLow()).isEqualTo(149.0);
+        assertThat(model.getOhlcv().getClose()).isEqualTo(152.0);
+        assertThat(model.getOhlcv().getVolume()).isEqualTo(1000000L);
         assertThat(model.getExchange()).isEqualTo("NASDAQ");
         assertThat(model.getCurrency()).isEqualTo("USD");
     }
@@ -59,11 +60,13 @@ class EquityMapperTest {
         model.setSymbol("GOOGL");
         model.setIsin("US02079K3059");
         model.setTime(now);
-        model.setOpen(2800.0);
-        model.setHigh(2850.0);
-        model.setLow(2780.0);
-        model.setClose(2820.0);
-        model.setVolume(500000L);
+        model.setOhlcv(OHLCVTPoint.builder()
+                .open(2800.0)
+                .high(2850.0)
+                .low(2780.0)
+                .close(2820.0)
+                .volume(500000L)
+                .build());
         model.setExchange("NASDAQ");
         model.setCurrency("USD");
 

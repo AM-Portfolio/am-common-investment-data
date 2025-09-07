@@ -87,7 +87,7 @@ public class EquityServiceImpl implements EquityService {
         if (result.isPresent()) {
             EquityPrice price = result.get();
             logger.debug("Latest price found for key: {}, symbol: {}, price: {}, time: {}, query duration: {}ms", 
-                key, price.getSymbol(), price.getClose(), price.getTime(), 
+                key, price.getSymbol(), price.getOhlcv().getClose(), price.getTime(), 
                 (endTime - startTime));
         } else {
             logger.debug("No price found for key: {}, query duration: {}ms", key, (endTime - startTime));
@@ -148,8 +148,8 @@ public class EquityServiceImpl implements EquityService {
                 EquityPrice lastPrice = latestBySymbol.get(symbol);
                 logger.debug("Symbol: {} - First price: {} at {}, Latest price: {} at {}, Total records: {}", 
                     symbol,
-                    firstPrice.getClose(), firstPrice.getTime(),
-                    lastPrice.getClose(), lastPrice.getTime(),
+                    firstPrice.getOhlcv().getClose(), firstPrice.getTime(),
+                    lastPrice.getOhlcv().getClose(), lastPrice.getTime(),
                     prices.stream().filter(p -> p.getSymbol().equals(symbol)).count());
             }
         } else {
@@ -192,7 +192,7 @@ public class EquityServiceImpl implements EquityService {
                 
                 if (latestPrice != null) {
                     logger.debug("Symbol: {} - Latest price: {} at {}, Total records: {}", 
-                        symbol, latestPrice.getClose(), latestPrice.getTime(), symbolPrices.size());
+                        symbol, latestPrice.getOhlcv().getClose(), latestPrice.getTime(), symbolPrices.size());
                 }
             });
             
@@ -246,7 +246,7 @@ public class EquityServiceImpl implements EquityService {
                 
                 if (latestPrice != null) {
                     logger.debug("ISIN: {} - Symbol: {} - Latest price: {} at {}, Total records: {}", 
-                        isin, latestPrice.getSymbol(), latestPrice.getClose(), 
+                        isin, latestPrice.getSymbol(), latestPrice.getOhlcv().getClose(), 
                         latestPrice.getTime(), isinPrices.size());
                 }
             });
@@ -277,8 +277,8 @@ public class EquityServiceImpl implements EquityService {
 
             logger.debug("Found {} prices for data: {}, symbol: {}", prices.size(), key, firstPrice.getSymbol());
             logger.debug("Price range - First: {} at {}, Last: {} at {}",
-                    firstPrice.getClose(), firstPrice.getTime(),
-                    lastPrice.getClose(), lastPrice.getTime());
+                    firstPrice.getOhlcv().getClose(), firstPrice.getTime(),
+                    lastPrice.getOhlcv().getClose(), lastPrice.getTime());
         } else {
             logger.debug("No prices found for data: {}", key);
         }

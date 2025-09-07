@@ -27,11 +27,11 @@ public class OHLCVTMapper {
         
         return OHLCVTPoint.builder()
                 .time(equityPrice.getTime().atZone(ZoneOffset.UTC).toLocalDateTime())
-                .open(equityPrice.getOpen())
-                .high(equityPrice.getHigh())
-                .low(equityPrice.getLow())
-                .close(equityPrice.getClose())
-                .volume(equityPrice.getVolume())
+                .open(equityPrice.getOhlcv().getOpen())
+                .high(equityPrice.getOhlcv().getHigh())
+                .low(equityPrice.getOhlcv().getLow())
+                .close(equityPrice.getOhlcv().getClose())
+                .volume(equityPrice.getOhlcv().getVolume())
                 .build();
     }
     
@@ -50,11 +50,7 @@ public class OHLCVTMapper {
         
         return EquityPrice.builder()
                 .time(ohlcvtPoint.getTime().atZone(ZoneOffset.UTC).toInstant())
-                .open(ohlcvtPoint.getOpen())
-                .high(ohlcvtPoint.getHigh())
-                .low(ohlcvtPoint.getLow())
-                .close(ohlcvtPoint.getClose())
-                .volume(ohlcvtPoint.getVolume())
+                .ohlcv(ohlcvtPoint)
                 .build();
     }
     
@@ -78,11 +74,7 @@ public class OHLCVTMapper {
                 .symbol(symbol)
                 .isin(isin)
                 .time(ohlcvtPoint.getTime().atZone(ZoneOffset.UTC).toInstant())
-                .open(ohlcvtPoint.getOpen())
-                .high(ohlcvtPoint.getHigh())
-                .low(ohlcvtPoint.getLow())
-                .close(ohlcvtPoint.getClose())
-                .volume(ohlcvtPoint.getVolume())
+                .ohlcv(ohlcvtPoint)
                 .exchange(exchange)
                 .currency(currency)
                 .build();

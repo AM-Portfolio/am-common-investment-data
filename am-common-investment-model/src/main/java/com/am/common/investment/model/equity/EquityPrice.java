@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 
 import java.time.Instant;
 
+import com.am.common.investment.model.historical.OHLCVTPoint;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 @Data
@@ -19,11 +20,7 @@ public class EquityPrice {
     private String isin;
     private Instant time;
     private Double lastPrice;
-    private Double open;
-    private Double high;
-    private Double low;
-    private Double close;
-    private Long volume;
+    private OHLCVTPoint ohlcv;
     private String exchange;
     private String currency;
 }
