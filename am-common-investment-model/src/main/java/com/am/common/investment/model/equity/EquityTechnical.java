@@ -7,10 +7,13 @@ import lombok.AllArgsConstructor;
 
 import java.time.Instant;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class EquityTechnical {
     private String symbol;
     private String isin;

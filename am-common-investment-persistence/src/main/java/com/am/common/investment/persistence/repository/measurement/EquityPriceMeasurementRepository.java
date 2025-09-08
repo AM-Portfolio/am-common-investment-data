@@ -24,6 +24,12 @@ public interface EquityPriceMeasurementRepository extends Repository<EquityPrice
     
     // Find by exchange and currency
      List<EquityPriceMeasurement> findByExchange(String exchange);
+     
+    // Find by multiple trading symbols
+     List<EquityPriceMeasurement> findByTradingSymbolIn(List<String> tradingSymbols);
+     
+    // Find by multiple ISINs
+     List<EquityPriceMeasurement> findByIsinIn(List<String> isins);
     
      // Find latest by symbol or ISIN
      default Optional<EquityPriceMeasurement> findLatestByKey(String key) {

@@ -16,11 +16,11 @@ public class TestAssertionUtil {
         
         assertThat(price.getSymbol()).isEqualTo(expected.getSymbol());
         assertThat(price.getIsin()).isEqualTo(expected.getIsin());
-        assertThat(price.getOpen()).isEqualTo(expected.getOpen());
-        assertThat(price.getHigh()).isEqualTo(expected.getHigh());
-        assertThat(price.getLow()).isEqualTo(expected.getLow());
-        assertThat(price.getClose()).isEqualTo(expected.getClose());
-        assertThat(price.getVolume()).isEqualTo(expected.getVolume());
+        assertThat(price.getOhlcv().getOpen()).isEqualTo(expected.getOhlcv().getOpen());
+        assertThat(price.getOhlcv().getHigh()).isEqualTo(expected.getOhlcv().getHigh());
+        assertThat(price.getOhlcv().getLow()).isEqualTo(expected.getOhlcv().getLow());
+        assertThat(price.getOhlcv().getClose()).isEqualTo(expected.getOhlcv().getClose());
+        assertThat(price.getOhlcv().getVolume()).isEqualTo(expected.getOhlcv().getVolume());
         assertThat(price.getExchange()).isEqualTo(expected.getExchange());
         assertThat(price.getCurrency()).isEqualTo(expected.getCurrency());
         assertThat(price.getTime()).isEqualTo(expected.getTime());
@@ -35,11 +35,11 @@ public class TestAssertionUtil {
             
             assertEquals("Symbol should match", expectedPrice.getSymbol(), actualPrice.getSymbol());
             assertEquals("ISIN should match", expectedPrice.getIsin(), actualPrice.getIsin());
-            assertEquals("Open price should match", expectedPrice.getOpen(), actualPrice.getOpen(), 0.001);
-            assertEquals("High price should match", expectedPrice.getHigh(), actualPrice.getHigh(), 0.001);
-            assertEquals("Low price should match", expectedPrice.getLow(), actualPrice.getLow(), 0.001);
-            assertEquals("Close price should match", expectedPrice.getClose(), actualPrice.getClose(), 0.001);
-            assertEquals("Volume should match", expectedPrice.getVolume(), actualPrice.getVolume());
+            assertEquals("Open price should match", expectedPrice.getOhlcv().getOpen(), actualPrice.getOhlcv().getOpen(), 0.001);
+            assertEquals("High price should match", expectedPrice.getOhlcv().getHigh(), actualPrice.getOhlcv().getHigh(), 0.001);
+            assertEquals("Low price should match", expectedPrice.getOhlcv().getLow(), actualPrice.getOhlcv().getLow(), 0.001);
+            assertEquals("Close price should match", expectedPrice.getOhlcv().getClose(), actualPrice.getOhlcv().getClose(), 0.001);
+            assertEquals("Volume should match", expectedPrice.getOhlcv().getVolume(), actualPrice.getOhlcv().getVolume());
             assertEquals("Exchange should match", expectedPrice.getExchange(), actualPrice.getExchange());
             assertEquals("Currency should match", expectedPrice.getCurrency(), actualPrice.getCurrency());
             assertNotNull("Time should not be null", actualPrice.getTime());
@@ -54,7 +54,7 @@ public class TestAssertionUtil {
             EquityPrice expectedPrice = expected.get(i);
             
             assertThat(actualPrice.getSymbol()).isEqualTo(expectedPrice.getSymbol());
-            assertThat(actualPrice.getClose()).isEqualTo(expectedPrice.getClose());
+            assertThat(actualPrice.getOhlcv().getClose()).isEqualTo(expectedPrice.getOhlcv().getClose());
             assertThat(actualPrice.getTime()).isEqualTo(expectedPrice.getTime());
         }
     }
